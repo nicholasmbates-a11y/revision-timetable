@@ -1794,17 +1794,109 @@ body {
     max-width: none;
     max-height: none;
     height: 100%;
+    width: 100%;
     border-radius: 0;
     border: none;
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
+    display: flex;
+    flex-direction: column;
   }
   .settings-header { padding: 14px 16px; }
   .settings-body { padding: 16px; }
-  .tut-text { padding: 22px 18px 18px; }
-  .tut-visual { min-height: 220px; max-height: 260px; }
-  .tut-footer { padding: 14px 16px; padding-bottom: calc(14px + env(safe-area-inset-bottom)); }
-  .tut-prev, .tut-next { padding: 12px 18px; font-size: .82rem; min-height: 44px; }
+
+  /* ── Tutorial: make slide content scrollable & sized to phone screen ── */
+  .tut-shell { overflow: hidden; }
+  .tut-slides {
+    flex: 1 1 auto;
+    min-height: 0;       /* allow flex child to actually shrink */
+    overflow: hidden;
+    position: relative;
+  }
+  .tut-slide {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tut-visual {
+    flex: 0 0 auto;
+    min-height: 180px;
+    max-height: 38vh;    /* shrink visuals to match screen */
+    padding: 16px;
+  }
+  .tut-text {
+    flex: 1 1 auto;
+    padding: 18px 18px 24px;
+    overflow: visible;   /* let .tut-slide do the scrolling */
+  }
+  .tut-title { font-size: 1.35rem; line-height: 1.2; }
+  .tut-desc  { font-size: .76rem; line-height: 1.65; }
+  .tut-step  { font-size: .58rem; }
+  .tut-footer {
+    flex: 0 0 auto;
+    padding: 12px 14px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tut-dots { order: 3; width: 100%; justify-content: center; padding-top: 4px; }
+  .tut-btns { flex: 1; justify-content: flex-end; }
+  .tut-skip { font-size: .66rem; }
+  .tut-prev, .tut-next { padding: 11px 16px; font-size: .78rem; min-height: 42px; }
+  /* Inside-visual mock layouts — let them flow */
+  .tut-visual > div, .vis-welcome, .vis-setup, .vis-bulk, .vis-week, .vis-mastery {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .resource-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* ── Setup colour picker: wrap onto multiple rows ── */
+  .color-picker {
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 10px;
+  }
+  .color-picker-label { width: 100%; margin-right: 0; }
+  .color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    flex: 0 0 auto;     /* never shrink — keep them circular */
+  }
+
+  /* ── Calendar controls: stack month nav on its own line, equalise buttons ── */
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .month-nav {
+    width: 100%;
+    padding: 8px 14px;
+    justify-content: space-between;
+  }
+  .month-nav .month-label { flex: 1; text-align: center; }
+  .controls > button {
+    flex: 1;
+    width: auto;
+  }
+  .controls .jump-today-btn,
+  .controls .clear-btn {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: .72rem;
+    min-height: 42px;
+  }
+  /* If the buttons appear next to each other on slightly larger phones */
+  @media (min-width: 420px) {
+    .controls {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .month-nav { width: 100%; }
+    .controls .jump-today-btn,
+    .controls .clear-btn { flex: 1 1 0; width: auto; }
+  }
 
   .exam-mods-grid { grid-template-columns: 1fr; max-height: 320px; }
   .exam-mod-chip { padding: 10px 12px; font-size: .72rem; }
