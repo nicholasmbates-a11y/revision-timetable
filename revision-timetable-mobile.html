@@ -843,6 +843,148 @@ body::before {
 }
 .exam-mod-chip span { line-height: 1.3; }
 
+/* ════════ PAST PAPERS ════════ */
+.papers-wrap { display: flex; flex-direction: column; gap: 14px; }
+
+.papers-add-btn {
+  background: linear-gradient(135deg, rgba(56,189,248,.15), rgba(167,139,250,.15));
+  border: 1px solid rgba(56,189,248,.3);
+  color: #38bdf8;
+  font-family: 'DM Mono', monospace; font-size: .72rem;
+  padding: 10px 18px; border-radius: 8px; cursor: pointer;
+  letter-spacing: .04em; transition: all .15s;
+  align-self: flex-start;
+}
+.papers-add-btn:hover, .papers-add-btn:active { background: linear-gradient(135deg, rgba(56,189,248,.22), rgba(167,139,250,.22)); }
+
+.papers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+.paper-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.paper-card:hover, .paper-card:active { border-left-color: rgba(56,189,248,.5); }
+.paper-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.paper-card-name { font-family: 'Syne',sans-serif; font-weight: 700; font-size: .85rem; color: var(--text); letter-spacing: -.01em; }
+.paper-card-pct {
+  font-family: 'Syne',sans-serif; font-weight: 800; font-size: 1.1rem;
+  letter-spacing: -.02em;
+}
+.paper-card-pct.high { color: var(--green); }
+.paper-card-pct.mid { color: #fbbf24; }
+.paper-card-pct.low { color: var(--red); }
+.paper-card-meta { font-size: .62rem; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap; }
+.paper-card-meta-item { display: inline-flex; align-items: center; gap: 4px; }
+.paper-card-subj-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .58rem; padding: 2px 7px;
+  border-radius: 50px; font-family: 'DM Mono',monospace;
+  letter-spacing: .04em;
+  background: var(--surface3); border: 1px solid var(--border2);
+  color: var(--text);
+}
+.paper-card-notes {
+  font-size: .65rem; color: var(--dim); line-height: 1.5;
+  border-top: 1px dashed var(--border); padding-top: 6px; margin-top: 2px;
+}
+
+.papers-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.papers-trend-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.papers-trend-name { display: flex; align-items: center; gap: 6px; font-family: 'Syne',sans-serif; font-weight: 700; font-size: .75rem; color: var(--text); }
+.papers-trend-color { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.papers-trend-stats { display: flex; gap: 12px; font-size: .6rem; color: var(--muted); flex-wrap: wrap; }
+.papers-trend-stat strong { font-family: 'Syne',sans-serif; font-weight: 700; color: var(--text); font-size: .85rem; }
+.papers-trend-spark {
+  display: flex; align-items: flex-end; gap: 2px; height: 24px;
+  margin-top: 2px;
+}
+.papers-trend-spark-bar {
+  flex: 1; min-width: 3px;
+  border-radius: 2px 2px 0 0;
+  transition: opacity .15s;
+}
+.papers-trend-spark-bar:hover { opacity: .75; }
+
+.papers-empty {
+  text-align: center; padding: 16px 12px;
+  color: var(--dim); font-size: .72rem;
+  background: var(--surface2);
+  border: 1px dashed var(--border2);
+  border-radius: 10px;
+}
+
+/* ════════ WEEKLY REVIEW ════════ */
+.review-stat-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.review-stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+}
+.review-stat-emoji { font-size: 1.4rem; line-height: 1; margin-bottom: 4px; }
+.review-stat-val {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.5rem; letter-spacing: -.02em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.review-stat-lbl {
+  font-size: .58rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-top: 2px;
+}
+
+.review-section { margin: 16px 0; }
+.review-section-title {
+  font-family: 'Syne',sans-serif; font-weight: 700; font-size: .8rem;
+  margin-bottom: 8px; color: var(--text);
+}
+.review-bar-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 6px; }
+.review-bar-line { display: flex; justify-content: space-between; font-size: .65rem; }
+.review-bar-line .name { color: var(--text); font-family: 'Syne',sans-serif; font-weight: 600; }
+.review-bar-line .val { color: var(--muted); font-family: 'DM Mono',monospace; }
+.review-bar-track { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+.review-bar-fill { height: 100%; border-radius: 2px; transition: width .4s ease; }
+
+.review-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.review-pill {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 50px; padding: 5px 12px;
+  font-family: 'DM Mono', monospace; font-size: .65rem;
+  color: var(--text);
+}
+.review-pill.gold { background: rgba(245,200,66,.12); border-color: rgba(245,200,66,.4); color: var(--gold); font-family: 'Syne',sans-serif; font-weight: 700; }
+.review-pill.warn { background: rgba(251,146,60,.1); border-color: rgba(251,146,60,.3); color: #fb923c; }
+
+.review-empty {
+  text-align: center; padding: 20px;
+  color: var(--dim); font-size: .75rem;
+}
+
 /* Jump to today button */
 .jump-today-btn {
   background: linear-gradient(135deg, rgba(56,189,248,.15), rgba(167,139,250,.15));
@@ -1292,20 +1434,21 @@ option { background: #181c25; }
 }
 
 /* slide area */
-.tut-slides { position: relative; flex: 1; overflow: hidden; }
+.tut-slides { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; }
 
 .tut-slide {
   display: none;
   flex-direction: column;
   height: 100%;
+  min-height: 0;
 }
 .tut-slide.active { display: flex; }
 
 /* slide inner layout: visual top, text bottom */
 .tut-visual {
   flex: 0 0 auto;
-  min-height: 280px;
-  max-height: 340px;
+  min-height: 220px;
+  max-height: 320px;
   position: relative;
   overflow: hidden;
   background: var(--surface2);
@@ -1313,10 +1456,19 @@ option { background: #181c25; }
   display: flex; align-items: center; justify-content: center;
 }
 
+@media (max-height: 720px) {
+  .tut-visual { min-height: 180px; max-height: 240px; }
+}
+@media (max-height: 580px) {
+  .tut-visual { min-height: 140px; max-height: 180px; }
+}
+
 .tut-text {
   padding: 28px 32px 24px;
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tut-step {
@@ -2814,7 +2966,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Welcome — 1 of 9</div>
+          <div class="tut-step">Welcome — 1 of 10</div>
           <div class="tut-title">Your smart<br><em>Revision Planner</em></div>
           <div class="tut-desc">
             Plan your daily revision sessions across all your A-Level subjects, track which modules you've covered, earn points for completing weeks, and watch your mastery level grow with every session.
@@ -2859,7 +3011,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Step 1 — 2 of 9</div>
+          <div class="tut-step">Step 1 — 2 of 10</div>
           <div class="tut-title">Add your <em>Subjects</em></div>
           <div class="tut-desc">
             First, type in each subject you're studying — for example <strong>Maths</strong>, <strong>Physics</strong>, <strong>Chemistry</strong>. Pick a unique colour for each one so it's easy to identify at a glance.
@@ -2894,7 +3046,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Step 2 — 3 of 9</div>
+          <div class="tut-step">Step 2 — 3 of 10</div>
           <div class="tut-title">Add your <em>Modules</em></div>
           <div class="tut-desc">
             For each subject, add all the topics or modules you need to revise. You can type them one at a time, or use <strong>Paste multiple modules at once</strong> to drop in a whole list in seconds — one module per line.
@@ -2950,7 +3102,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Where to look — 4 of 9</div>
+          <div class="tut-step">Where to look — 4 of 10</div>
           <div class="tut-title">Finding your <em>Module Lists</em></div>
           <div class="tut-desc">
             Not sure what to put as modules? <strong>Go to your exam board's website</strong> and download the specification PDF for your subject — it lists every topic you need to know. Revision sites like PMT and Save My Exams also have them pre-organised.
@@ -2991,7 +3143,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Step 3 — 5 of 9</div>
+          <div class="tut-step">Step 3 — 5 of 10</div>
           <div class="tut-title">Plan your <em>Daily Sessions</em></div>
           <div class="tut-desc">
             Click a week to expand it into large day tiles. Each day has <strong>three session slots</strong>: Morning ☀, Lunch 🌿, and Afternoon 🌙.
@@ -3030,7 +3182,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Gamification — 6 of 9</div>
+          <div class="tut-step">Gamification — 6 of 10</div>
           <div class="tut-title">Level up your <em>Mastery</em></div>
           <div class="tut-desc">
             The app tracks two things as you revise:
@@ -3091,7 +3243,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Smart Features — 7 of 9</div>
+          <div class="tut-step">Smart Features — 7 of 10</div>
           <div class="tut-title">Stay on track with <em>Smart Tools</em></div>
           <div class="tut-desc">
             <strong>✓ Mark Done</strong> — tick off each session as you actually complete it. Only ticked sessions count toward points and mastery, so the numbers reflect real revision.
@@ -3142,7 +3294,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Settings & Tools — 8 of 9</div>
+          <div class="tut-step">Settings & Tools — 8 of 10</div>
           <div class="tut-title">Make it <em>Yours</em></div>
           <div class="tut-desc">
             The top bar always has these settings ready:
@@ -3154,8 +3306,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <strong>🖨 Print</strong> — generates a clean, paper-friendly version of your full month with every week expanded. Use it to print to paper or "Save as PDF" to keep an offline copy or stick it on your wall.
             <br><br>
             <strong>❓ Help</strong> — opens this tutorial again at any time. <strong>⬇ Export / ⬆ Import</strong> in the main view back up and restore your data. <strong>📍 Jump to Today</strong> snaps you back to the current week instantly.
-            <br><br>
-            <strong>You're all set — let's build your plan!</strong>
           </div>
         </div>
       </div>
@@ -3205,7 +3355,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
           </div>
         </div>
         <div class="tut-text">
-          <div class="tut-step">Pro Features — 9 of 9</div>
+          <div class="tut-step">Pro Features — 9 of 10</div>
           <div class="tut-title">Take it <em>Further</em></div>
           <div class="tut-desc">
             <strong>✨ Smart Suggest</strong> — uses spaced repetition. The longer ago you revised something (and the lower your confidence), the higher its priority.
@@ -3221,6 +3371,54 @@ input[type="date"]::-webkit-calendar-picker-indicator {
             <strong>📅 Calendar export</strong> — download your sessions as a .ics file to import into Google or Apple Calendar with reminders.
             <br><br>
             <strong>⚙ Settings</strong> — adjust your weekly target (auto-scales to 60% of your subjects, or fix it) and manage rest days.
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 10: Past Papers & Weekly Review -->
+      <div class="tut-slide" id="tslide-9">
+        <div class="tut-visual" style="align-items:center;justify-content:center;padding:24px;">
+          <div style="display:flex;flex-direction:column;gap:14px;width:90%;max-width:480px;">
+            <div style="background:var(--surface3);border:1px solid var(--border2);border-left:3px solid #38bdf8;border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;">
+                <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:var(--text);">Paper 1, June 2023</div>
+                <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--green);">76%</div>
+              </div>
+              <div style="font-size:.62rem;color:var(--muted);display:flex;gap:12px;">
+                <span style="border:1px solid #38bdf8;color:#38bdf8;font-size:.58rem;padding:2px 7px;border-radius:50px;">Physics</span>
+                <span>📅 14 Apr</span>
+                <span>🎯 53/70</span>
+                <span>⏱ 95m</span>
+              </div>
+            </div>
+            <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:var(--text);margin-bottom:10px;">📊 Last week</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);">12</div>
+                  <div style="font-size:.5rem;color:var(--muted);text-transform:uppercase;">Sessions</div>
+                </div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--gold);">100</div>
+                  <div style="font-size:.5rem;color:var(--muted);text-transform:uppercase;">Points</div>
+                </div>
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;">
+                  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);">3.8</div>
+                  <div style="font-size:.5rem;color:var(--muted);text-transform:uppercase;">Avg ★</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tut-text">
+          <div class="tut-step">Track Progress — 10 of 10</div>
+          <div class="tut-title">Reflect &amp; <em>Improve</em></div>
+          <div class="tut-desc">
+            <strong>📝 Past Papers</strong> — log every paper you complete with score, time, and notes. The app charts your trend per subject so you can see whether your scores are climbing.
+            <br><br>
+            <strong>📊 Weekly Review</strong> — every Monday, the app shows a recap of last week's sessions, points earned, top topic, neglected subjects, and what to focus on next. Open it any time from More.
+            <br><br>
+            <strong>You're all set — let's build your plan!</strong>
           </div>
         </div>
       </div>
@@ -3322,6 +3520,24 @@ input[type="date"]::-webkit-calendar-picker-indicator {
       </div>
     </div>
 
+    <!-- Past Papers (in Subjects tab) -->
+    <div class="collapsible-section" id="papersSection">
+      <div class="collapsible-header" onclick="toggleSection('papersSection')">
+        <div class="collapsible-title">
+          <span class="collapsible-chev">▾</span>
+          <span>📝 Past Papers</span>
+          <span class="collapsible-meta" id="papersMeta"></span>
+        </div>
+      </div>
+      <div class="collapsible-body">
+        <div class="papers-wrap">
+          <button class="papers-add-btn" onclick="openPaperModal()">+ Log a paper</button>
+          <div class="papers-list" id="papersList"></div>
+          <div class="papers-summary" id="papersSummary"></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Stats (in Subjects tab) -->
     <div class="collapsible-section stats-section" id="statsSection">
       <div class="collapsible-header" onclick="toggleSection('statsSection')">
@@ -3369,6 +3585,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="more-grid">
       <button class="more-btn" onclick="openSetup()"><span class="more-icon">📚</span><span>Edit Subjects</span></button>
       <button class="more-btn" onclick="openSettings()"><span class="more-icon">⚙</span><span>Settings</span></button>
+      <button class="more-btn" onclick="openWeeklyReview()"><span class="more-icon">📊</span><span>Weekly Review</span></button>
       <button class="more-btn" onclick="exportData()"><span class="more-icon">⬇</span><span>Export Backup</span></button>
       <label class="more-btn"><span class="more-icon">⬆</span><span>Import Backup</span><input type="file" accept=".json" onchange="importData(event)" style="display:none;"></label>
       <button class="more-btn" onclick="exportICS()"><span class="more-icon">📅</span><span>Export to Calendar</span></button>
@@ -3440,6 +3657,36 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     <div class="exam-modal-footer">
       <button class="reset-btn" id="examModalDelete">🗑 Delete</button>
       <button class="save-btn" id="examModalSave" style="margin-left:auto;">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PAST PAPER MODAL ════════════════════════════ -->
+<div id="paperModalOverlay" class="settings-overlay hidden">
+  <div class="settings-shell exam-shell">
+    <div class="settings-header">
+      <h2 id="paperModalTitle">📝 Log Past Paper</h2>
+      <button class="settings-close" onclick="closePaperModal()">×</button>
+    </div>
+    <div class="settings-body" id="paperModalBody"></div>
+    <div class="exam-modal-footer">
+      <button class="reset-btn" id="paperModalDelete" style="display:none;">🗑 Delete</button>
+      <button class="save-btn" id="paperModalSave" style="margin-left:auto;">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WEEKLY REVIEW MODAL ═════════════════════════ -->
+<div id="reviewModalOverlay" class="settings-overlay hidden">
+  <div class="settings-shell exam-shell">
+    <div class="settings-header">
+      <h2>📊 Weekly Review</h2>
+      <button class="settings-close" onclick="closeReviewModal()">×</button>
+    </div>
+    <div class="settings-body" id="reviewModalBody"></div>
+    <div class="exam-modal-footer">
+      <button class="reset-btn" onclick="closeReviewModal()" style="border-color:var(--border2);color:var(--dim);">Dismiss</button>
+      <button class="save-btn" onclick="closeReviewModal()" style="margin-left:auto;">Got it</button>
     </div>
   </div>
 </div>
@@ -3528,6 +3775,8 @@ Object.keys(examDates).forEach(sid => {
 });
 let restDays       = JSON.parse(localStorage.getItem('rtRestDays')       || '{"weekly":[],"specific":[]}'); // weekly: [0=Mon..6=Sun], specific: ['YYYY-MM-DD']
 let settings       = JSON.parse(localStorage.getItem('rtSettings')       || '{"weekTargetMode":"auto","weekTargetCustom":3}'); // mode: 'auto' | 'fixed', custom: int
+let pastPapers     = JSON.parse(localStorage.getItem('rtPastPapers')     || '[]');
+let weeklyReviews  = JSON.parse(localStorage.getItem('rtWeeklyReviews')  || '{}');
 
 const today        = new Date();
 let currentYear    = today.getFullYear();
@@ -3546,6 +3795,8 @@ function save() {
   localStorage.setItem('rtExamDates',      JSON.stringify(examDates));
   localStorage.setItem('rtRestDays',       JSON.stringify(restDays));
   localStorage.setItem('rtSettings',       JSON.stringify(settings));
+  localStorage.setItem('rtPastPapers',     JSON.stringify(pastPapers));
+  localStorage.setItem('rtWeeklyReviews',  JSON.stringify(weeklyReviews));
 }
 
 /* ═══════════════════════════════════
@@ -5041,6 +5292,552 @@ function closeExamModal() {
 }
 
 /* ═══════════════════════════════════
+   PAST PAPERS
+═══════════════════════════════════ */
+function openPaperModal(paperId) {
+  if (!subjects || !subjects.length) {
+    alert('Add some subjects first!');
+    return;
+  }
+
+  let paper;
+  if (paperId) {
+    paper = pastPapers.find(p => p.id === paperId);
+  }
+  if (!paper) {
+    paper = {
+      id: 'paper-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+      subjectId: subjects[0].id,
+      name: '',
+      date: dateToYMD(new Date()),
+      score: '',
+      maxScore: '',
+      timeMinutes: '',
+      notes: '',
+      _isNew: true,
+    };
+  }
+
+  const overlay = document.getElementById('paperModalOverlay');
+  const body    = document.getElementById('paperModalBody');
+  document.getElementById('paperModalTitle').textContent = paper._isNew ? '📝 Log Past Paper' : '📝 Edit Past Paper';
+  document.getElementById('paperModalDelete').style.display = paper._isNew ? 'none' : 'inline-flex';
+
+  body.innerHTML = '';
+
+  const subjLbl = document.createElement('label');
+  subjLbl.className = 'exam-field-label';
+  subjLbl.textContent = 'Subject';
+  body.appendChild(subjLbl);
+  const subjSel = document.createElement('select');
+  subjSel.className = 'exam-field-input';
+  subjects.forEach(s => {
+    const o = document.createElement('option');
+    o.value = s.id; o.textContent = s.name;
+    if (String(s.id) === String(paper.subjectId)) o.selected = true;
+    subjSel.appendChild(o);
+  });
+  subjSel.onchange = () => paper.subjectId = subjSel.value;
+  body.appendChild(subjSel);
+
+  const nameLbl = document.createElement('label');
+  nameLbl.className = 'exam-field-label';
+  nameLbl.textContent = 'Paper name';
+  body.appendChild(nameLbl);
+  const nameInp = document.createElement('input');
+  nameInp.type = 'text';
+  nameInp.className = 'exam-field-input';
+  nameInp.placeholder = 'e.g. Paper 1, June 2023';
+  nameInp.value = paper.name;
+  nameInp.oninput = () => paper.name = nameInp.value;
+  body.appendChild(nameInp);
+
+  const dateLbl = document.createElement('label');
+  dateLbl.className = 'exam-field-label';
+  dateLbl.textContent = 'Date sat';
+  body.appendChild(dateLbl);
+  const dateInp = document.createElement('input');
+  dateInp.type = 'date';
+  dateInp.className = 'exam-field-input';
+  dateInp.value = paper.date;
+  dateInp.oninput = () => paper.date = dateInp.value;
+  body.appendChild(dateInp);
+
+  const scoreRow = document.createElement('div');
+  scoreRow.style.cssText = 'display:flex;gap:10px;align-items:flex-end;';
+  const scoreCol = document.createElement('div');
+  scoreCol.style.flex = '1';
+  const scoreLbl = document.createElement('label');
+  scoreLbl.className = 'exam-field-label';
+  scoreLbl.textContent = 'Your score';
+  const scoreInp = document.createElement('input');
+  scoreInp.type = 'number'; scoreInp.min = '0'; scoreInp.step = '0.5';
+  scoreInp.className = 'exam-field-input';
+  scoreInp.placeholder = '42';
+  scoreInp.value = paper.score;
+  scoreInp.style.marginBottom = '0';
+  scoreInp.oninput = () => paper.score = scoreInp.value;
+  scoreCol.appendChild(scoreLbl); scoreCol.appendChild(scoreInp);
+
+  const slash = document.createElement('div');
+  slash.style.cssText = 'font-family:Syne,sans-serif;font-size:1.4rem;color:var(--muted);padding-bottom:8px;';
+  slash.textContent = '/';
+
+  const maxCol = document.createElement('div');
+  maxCol.style.flex = '1';
+  const maxLbl = document.createElement('label');
+  maxLbl.className = 'exam-field-label';
+  maxLbl.textContent = 'Out of';
+  const maxInp = document.createElement('input');
+  maxInp.type = 'number'; maxInp.min = '1'; maxInp.step = '0.5';
+  maxInp.className = 'exam-field-input';
+  maxInp.placeholder = '70';
+  maxInp.value = paper.maxScore;
+  maxInp.style.marginBottom = '0';
+  maxInp.oninput = () => paper.maxScore = maxInp.value;
+  maxCol.appendChild(maxLbl); maxCol.appendChild(maxInp);
+
+  scoreRow.appendChild(scoreCol);
+  scoreRow.appendChild(slash);
+  scoreRow.appendChild(maxCol);
+  body.appendChild(scoreRow);
+
+  const timeLbl = document.createElement('label');
+  timeLbl.className = 'exam-field-label';
+  timeLbl.style.marginTop = '14px';
+  timeLbl.textContent = 'Time taken (minutes, optional)';
+  body.appendChild(timeLbl);
+  const timeInp = document.createElement('input');
+  timeInp.type = 'number'; timeInp.min = '0';
+  timeInp.className = 'exam-field-input';
+  timeInp.placeholder = '90';
+  timeInp.value = paper.timeMinutes;
+  timeInp.oninput = () => paper.timeMinutes = timeInp.value;
+  body.appendChild(timeInp);
+
+  const notesLbl = document.createElement('label');
+  notesLbl.className = 'exam-field-label';
+  notesLbl.textContent = 'Notes (sticking points, what went well…)';
+  body.appendChild(notesLbl);
+  const notesArea = document.createElement('textarea');
+  notesArea.className = 'exam-field-input';
+  notesArea.style.minHeight = '70px';
+  notesArea.style.resize = 'vertical';
+  notesArea.style.fontFamily = "'DM Mono', monospace";
+  notesArea.value = paper.notes;
+  notesArea.oninput = () => paper.notes = notesArea.value;
+  body.appendChild(notesArea);
+
+  document.getElementById('paperModalSave').onclick = () => {
+    if (!paper.name || !paper.date) {
+      alert('Please add a name and date.');
+      return;
+    }
+    if (paper.score !== '' && (paper.maxScore === '' || +paper.maxScore <= 0)) {
+      alert('If you log a score, you also need a "Out of" total.');
+      return;
+    }
+    if (paper._isNew) {
+      delete paper._isNew;
+      pastPapers.push(paper);
+    }
+    save();
+    closePaperModal();
+    render();
+    showToast('📝 Paper saved');
+    if (typeof haptic === 'function') haptic('success');
+  };
+
+  document.getElementById('paperModalDelete').onclick = () => {
+    if (!confirm('Delete this paper entry?')) return;
+    pastPapers = pastPapers.filter(p => p.id !== paper.id);
+    save();
+    closePaperModal();
+    render();
+  };
+
+  overlay.classList.remove('hidden');
+}
+
+function closePaperModal() {
+  document.getElementById('paperModalOverlay').classList.add('hidden');
+}
+
+function renderPapers() {
+  const list    = document.getElementById('papersList');
+  const summary = document.getElementById('papersSummary');
+  const meta    = document.getElementById('papersMeta');
+  if (!list) return;
+
+  list.innerHTML    = '';
+  summary.innerHTML = '';
+
+  if (!pastPapers.length) {
+    if (meta) meta.textContent = '';
+    const empty = document.createElement('div');
+    empty.className = 'papers-empty';
+    empty.textContent = 'No past papers logged yet — tap "+ Log a paper" once you finish one.';
+    list.appendChild(empty);
+    return;
+  }
+
+  const sorted = [...pastPapers].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  if (meta) meta.textContent = `${pastPapers.length} logged`;
+
+  sorted.forEach(p => {
+    const subj = subjects.find(s => String(s.id) === String(p.subjectId));
+    const card = document.createElement('div');
+    card.className = 'paper-card';
+    if (subj) card.style.borderLeftColor = subj.color;
+    card.onclick = () => openPaperModal(p.id);
+
+    const top = document.createElement('div');
+    top.className = 'paper-card-top';
+    const name = document.createElement('div');
+    name.className = 'paper-card-name';
+    name.textContent = p.name || 'Untitled';
+    top.appendChild(name);
+
+    if (p.score !== '' && p.maxScore !== '' && +p.maxScore > 0) {
+      const pct = Math.round((+p.score / +p.maxScore) * 100);
+      const pctEl = document.createElement('div');
+      pctEl.className = `paper-card-pct ${pct >= 70 ? 'high' : pct >= 50 ? 'mid' : 'low'}`;
+      pctEl.textContent = `${pct}%`;
+      top.appendChild(pctEl);
+    }
+    card.appendChild(top);
+
+    const m = document.createElement('div');
+    m.className = 'paper-card-meta';
+    if (subj) {
+      const badge = document.createElement('span');
+      badge.className = 'paper-card-subj-badge';
+      badge.style.borderColor = subj.color;
+      badge.style.color = subj.color;
+      badge.textContent = subj.name;
+      m.appendChild(badge);
+    }
+    if (p.date) {
+      const dateEl = document.createElement('span');
+      dateEl.className = 'paper-card-meta-item';
+      dateEl.textContent = `📅 ${new Date(p.date).toLocaleDateString(undefined, { day:'numeric', month:'short', year:'numeric' })}`;
+      m.appendChild(dateEl);
+    }
+    if (p.score !== '' && p.maxScore !== '') {
+      const sEl = document.createElement('span');
+      sEl.className = 'paper-card-meta-item';
+      sEl.textContent = `🎯 ${p.score}/${p.maxScore}`;
+      m.appendChild(sEl);
+    }
+    if (p.timeMinutes) {
+      const tEl = document.createElement('span');
+      tEl.className = 'paper-card-meta-item';
+      tEl.textContent = `⏱ ${p.timeMinutes}m`;
+      m.appendChild(tEl);
+    }
+    card.appendChild(m);
+
+    if (p.notes) {
+      const notes = document.createElement('div');
+      notes.className = 'paper-card-notes';
+      notes.textContent = p.notes;
+      card.appendChild(notes);
+    }
+    list.appendChild(card);
+  });
+
+  const bySubj = {};
+  pastPapers.forEach(p => {
+    if (!p.subjectId || p.score === '' || p.maxScore === '' || +p.maxScore <= 0) return;
+    const key = String(p.subjectId);
+    if (!bySubj[key]) bySubj[key] = [];
+    bySubj[key].push({ date: p.date, pct: (+p.score / +p.maxScore) * 100 });
+  });
+
+  Object.entries(bySubj).forEach(([sid, entries]) => {
+    if (entries.length < 1) return;
+    const subj = subjects.find(s => String(s.id) === String(sid));
+    if (!subj) return;
+    entries.sort((a,b) => (a.date || '').localeCompare(b.date || ''));
+
+    const card = document.createElement('div');
+    card.className = 'papers-trend-card';
+
+    const nameRow = document.createElement('div');
+    nameRow.className = 'papers-trend-name';
+    const dot = document.createElement('div');
+    dot.className = 'papers-trend-color';
+    dot.style.background = subj.color;
+    nameRow.appendChild(dot);
+    nameRow.appendChild(document.createTextNode(subj.name));
+    card.appendChild(nameRow);
+
+    const stats = document.createElement('div');
+    stats.className = 'papers-trend-stats';
+    const avg = entries.reduce((a, e) => a + e.pct, 0) / entries.length;
+    const latest = entries[entries.length - 1].pct;
+    stats.innerHTML = `
+      <span class="papers-trend-stat"><strong>${entries.length}</strong> paper${entries.length !== 1 ? 's' : ''}</span>
+      <span class="papers-trend-stat">Avg <strong>${Math.round(avg)}%</strong></span>
+      <span class="papers-trend-stat">Latest <strong>${Math.round(latest)}%</strong></span>
+    `;
+    card.appendChild(stats);
+
+    const spark = document.createElement('div');
+    spark.className = 'papers-trend-spark';
+    entries.forEach(e => {
+      const bar = document.createElement('div');
+      bar.className = 'papers-trend-spark-bar';
+      bar.style.height = `${Math.max(8, (e.pct/100) * 100)}%`;
+      bar.style.background = subj.color;
+      bar.style.opacity = '0.6';
+      bar.title = `${new Date(e.date).toLocaleDateString()} · ${Math.round(e.pct)}%`;
+      spark.appendChild(bar);
+    });
+    card.appendChild(spark);
+
+    summary.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════════
+   WEEKLY REVIEW
+═══════════════════════════════════ */
+function getISOWeekKey(date) {
+  const d = new Date(date);
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + 3 - (d.getDay() + 6) % 7);
+  const yearStart = new Date(d.getFullYear(), 0, 4);
+  yearStart.setDate(yearStart.getDate() + 3 - (yearStart.getDay() + 6) % 7);
+  const week = 1 + Math.round((d - yearStart) / (7 * 24 * 60 * 60 * 1000));
+  return `${d.getFullYear()}-W${String(week).padStart(2, '0')}`;
+}
+
+function getPreviousISOWeekKey() {
+  const d = new Date();
+  d.setDate(d.getDate() - 7);
+  return getISOWeekKey(d);
+}
+
+function getWeekRange(isoKey) {
+  const [year, weekStr] = isoKey.split('-W');
+  const week = parseInt(weekStr);
+  const jan4 = new Date(+year, 0, 4);
+  const jan4Day = (jan4.getDay() + 6) % 7;
+  const monday = new Date(jan4);
+  monday.setDate(jan4.getDate() - jan4Day + (week - 1) * 7);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  monday.setHours(0,0,0,0); sunday.setHours(23,59,59,999);
+  return [monday, sunday];
+}
+
+function buildWeeklyReviewData(isoKey) {
+  const [monday, sunday] = getWeekRange(isoKey);
+  const data = {
+    isoKey,
+    range: { start: monday, end: sunday },
+    sessionsDone: 0,
+    pointsEarned: 0,
+    bySubject: {},
+    topModule: null,
+    neglectedSubjects: [],
+    confidenceAvg: null,
+    weekComplete: false,
+  };
+
+  let confSum = 0, confN = 0;
+  const moduleHits = {};
+
+  Object.entries(timetable).forEach(([y, yD]) =>
+    Object.entries(yD).forEach(([m, mD]) =>
+      Object.entries(mD).forEach(([d, dD]) =>
+        Object.values(dD).forEach(raw => {
+          const s = normalizeSlot(raw);
+          if (!s.subject || !s.done) return;
+          const date = s.completedAt ? new Date(s.completedAt) : ymdToDate(y, m, d);
+          if (date < monday || date > sunday) return;
+          data.sessionsDone++;
+          data.bySubject[s.subject] = (data.bySubject[s.subject] || 0) + 1;
+          s.modules.forEach(mm => {
+            if (!mm.module) return;
+            const k = `${s.subject}::${mm.module}`;
+            moduleHits[k] = (moduleHits[k] || 0) + 1;
+            if (mm.confidence != null) { confSum += mm.confidence; confN++; }
+          });
+        })
+      )
+    )
+  );
+
+  let bestK = null, bestC = 0;
+  Object.entries(moduleHits).forEach(([k, c]) => {
+    if (c > bestC) { bestC = c; bestK = k; }
+  });
+  if (bestK) {
+    const [sid, mod] = bestK.split('::');
+    const subj = (subjects||[]).find(s => String(s.id) === String(sid));
+    data.topModule = { subject: subj ? subj.name : '?', module: mod, count: bestC, color: subj ? subj.color : null };
+  }
+
+  data.neglectedSubjects = (subjects||[]).filter(s => !data.bySubject[s.id]).map(s => s.name);
+
+  if (confN > 0) data.confidenceAvg = confSum / confN;
+
+  const target = (typeof getWeekTarget === 'function') ? getWeekTarget() : { needed: 3, perSubject: 3 };
+  const subjectsHitTarget = Object.values(data.bySubject).filter(c => c >= target.perSubject).length;
+  data.weekComplete = subjectsHitTarget >= target.needed;
+  data.pointsEarned = data.weekComplete ? 100 : 0;
+
+  return data;
+}
+
+function openWeeklyReview(isoKey) {
+  const key = isoKey || getPreviousISOWeekKey();
+  const data = buildWeeklyReviewData(key);
+  const overlay = document.getElementById('reviewModalOverlay');
+  const body    = document.getElementById('reviewModalBody');
+  body.innerHTML = '';
+
+  const header = document.createElement('div');
+  header.style.cssText = 'font-size:.7rem;color:var(--muted);margin-bottom:14px;';
+  header.textContent = `Week of ${data.range.start.toLocaleDateString(undefined, { day:'numeric', month:'short' })} – ${data.range.end.toLocaleDateString(undefined, { day:'numeric', month:'short' })}`;
+  body.appendChild(header);
+
+  if (data.sessionsDone === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'review-empty';
+    empty.innerHTML = '🌱 No sessions completed this week.<br>Fresh start coming up!';
+    body.appendChild(empty);
+    weeklyReviews[key] = { ...(weeklyReviews[key]||{}), seenAt: new Date().toISOString() };
+    save();
+    overlay.classList.remove('hidden');
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'review-stat-grid';
+  const stats = [
+    { emoji: '✅', val: data.sessionsDone, lbl: 'Sessions Done' },
+    { emoji: '⭐', val: data.pointsEarned, lbl: 'Points' },
+    { emoji: '🎯', val: Object.keys(data.bySubject).length, lbl: 'Subjects Touched' },
+    { emoji: data.confidenceAvg ? '★' : '—', val: data.confidenceAvg ? data.confidenceAvg.toFixed(1) : '—', lbl: 'Avg Confidence' },
+  ];
+  stats.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'review-stat-card';
+    card.innerHTML = `<div class="review-stat-emoji">${s.emoji}</div><div class="review-stat-val">${s.val}</div><div class="review-stat-lbl">${s.lbl}</div>`;
+    grid.appendChild(card);
+  });
+  body.appendChild(grid);
+
+  if (data.weekComplete) {
+    const pill = document.createElement('div');
+    pill.className = 'review-pills';
+    pill.style.marginBottom = '12px';
+    pill.innerHTML = `<div class="review-pill gold">🏆 Week Won! +100 points</div>`;
+    body.appendChild(pill);
+  }
+
+  if (data.topModule) {
+    const sec = document.createElement('div');
+    sec.className = 'review-section';
+    sec.innerHTML = `<div class="review-section-title">⭐ Most-revised topic</div>`;
+    const pill = document.createElement('div');
+    pill.className = 'review-pill';
+    if (data.topModule.color) {
+      pill.style.borderColor = data.topModule.color;
+      pill.style.color = data.topModule.color;
+    }
+    pill.textContent = `${data.topModule.subject} — ${data.topModule.module} (×${data.topModule.count})`;
+    sec.appendChild(pill);
+    body.appendChild(sec);
+  }
+
+  if (Object.keys(data.bySubject).length) {
+    const sec = document.createElement('div');
+    sec.className = 'review-section';
+    sec.innerHTML = `<div class="review-section-title">📊 Time by subject</div>`;
+    const max = Math.max(...Object.values(data.bySubject));
+    Object.entries(data.bySubject)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([sid, count]) => {
+        const subj = subjects.find(s => String(s.id) === String(sid));
+        if (!subj) return;
+        const row = document.createElement('div');
+        row.className = 'review-bar-row';
+        row.innerHTML = `
+          <div class="review-bar-line"><span class="name" style="color:${subj.color};">${subj.name}</span><span class="val">${count} session${count !== 1 ? 's' : ''}</span></div>
+          <div class="review-bar-track"><div class="review-bar-fill" style="width:${(count/max)*100}%;background:${subj.color};"></div></div>
+        `;
+        sec.appendChild(row);
+      });
+    body.appendChild(sec);
+  }
+
+  if (data.neglectedSubjects.length) {
+    const sec = document.createElement('div');
+    sec.className = 'review-section';
+    sec.innerHTML = `<div class="review-section-title">⚠ Neglected this week</div>`;
+    const pills = document.createElement('div');
+    pills.className = 'review-pills';
+    data.neglectedSubjects.forEach(name => {
+      const pill = document.createElement('div');
+      pill.className = 'review-pill warn';
+      pill.textContent = name;
+      pills.appendChild(pill);
+    });
+    sec.appendChild(pills);
+    body.appendChild(sec);
+  }
+
+  if (data.neglectedSubjects.length) {
+    const sec = document.createElement('div');
+    sec.className = 'review-section';
+    sec.innerHTML = `<div class="review-section-title">💡 Focus next week</div>
+      <div style="font-size:.72rem;color:var(--dim);line-height:1.55;">
+        Try to fit ${data.neglectedSubjects.length === 1 ? data.neglectedSubjects[0] : (data.neglectedSubjects.slice(0,-1).join(', ') + ' and ' + data.neglectedSubjects.slice(-1))} into your schedule. The Suggest button will help prioritise these.
+      </div>`;
+    body.appendChild(sec);
+  }
+
+  weeklyReviews[key] = { ...(weeklyReviews[key]||{}), seenAt: new Date().toISOString() };
+  save();
+  overlay.classList.remove('hidden');
+}
+
+function closeReviewModal() {
+  const key = getPreviousISOWeekKey();
+  weeklyReviews[key] = { ...(weeklyReviews[key]||{}), dismissedAt: new Date().toISOString() };
+  save();
+  document.getElementById('reviewModalOverlay').classList.add('hidden');
+}
+
+function maybeShowWeeklyReview() {
+  if (!subjects || !subjects.length) return;
+  const prevKey = getPreviousISOWeekKey();
+  if (weeklyReviews[prevKey] && weeklyReviews[prevKey].dismissedAt) return;
+  const now = new Date();
+  const fortnight = new Date(now); fortnight.setDate(fortnight.getDate() - 14);
+  let recentCount = 0;
+  Object.values(timetable).forEach(yD =>
+    Object.values(yD).forEach(mD =>
+      Object.values(mD).forEach(dD =>
+        Object.values(dD).forEach(raw => {
+          const s = normalizeSlot(raw);
+          if (s.done && s.completedAt) {
+            const t = new Date(s.completedAt);
+            if (t >= fortnight) recentCount++;
+          }
+        })
+      )
+    )
+  );
+  if (recentCount < 1) return;
+  setTimeout(() => openWeeklyReview(prevKey), 700);
+}
+
+/* ═══════════════════════════════════
    SETTINGS MODAL
 ═══════════════════════════════════ */
 function openSettings() {
@@ -5055,6 +5852,7 @@ function openSettings() {
     pill.onclick = () => {
       toggleWeeklyRest(idx);
       pill.classList.toggle('active');
+      if (typeof render === 'function') render();
     };
     row.appendChild(pill);
   });
@@ -5762,10 +6560,10 @@ function renderAccordion() {
     bar.appendChild(barRight);
 
     bar.addEventListener('click', () => {
-      activeWeekIdx = activeWeekIdx === w ? null : w;
+      activeWeekIdx = activeWeekIdx === w ? -1 : w; // -1 = explicitly all closed
       renderAccordion();
       // Scroll the opened row into view gently
-      if (activeWeekIdx !== null) {
+      if (activeWeekIdx !== null && activeWeekIdx !== -1) {
         setTimeout(() => {
           const openRow = document.querySelector('.week-row.open');
           if (openRow) openRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -5956,6 +6754,7 @@ function render() {
   renderNextTask();
   renderBadges();
   renderMastery();
+  if (typeof renderPapers === 'function') renderPapers();
   renderAccordion();
   renderStats();
   if (typeof updateStickyBar === 'function') updateStickyBar();
@@ -6388,7 +7187,7 @@ function showTutorial() {
 ═══════════════════════════════════ */
 function exportData() {
   const payload = {
-    version: 3,
+    version: 4,
     exportedAt: new Date().toISOString(),
     subjects,
     timetable,
@@ -6398,6 +7197,8 @@ function exportData() {
     examDates,
     restDays,
     settings,
+    pastPapers,
+    weeklyReviews,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
@@ -6427,6 +7228,8 @@ function importData(event) {
       examDates       = data.examDates      || {};
       restDays        = data.restDays       || { weekly: [], specific: [] };
       settings        = data.settings       || { weekTargetMode: 'auto', weekTargetCustom: 3 };
+      pastPapers      = data.pastPapers     || [];
+      weeklyReviews   = data.weeklyReviews  || {};
       save();
       showToast('✅ Data restored from backup!');
       render();
@@ -6441,7 +7244,7 @@ function importData(event) {
 /* ═══════════════════════════════════
    TUTORIAL
 ═══════════════════════════════════ */
-const TUT_TOTAL = 9;
+const TUT_TOTAL = 10;
 let tutCurrent = 0;
 
 function renderTutDots() {
@@ -6518,6 +7321,7 @@ if (!tutSeen) {
 } else if (subjects && subjects.length > 0) {
   document.getElementById('tutorialOverlay').classList.add('hidden');
   showMain();
+  if (typeof maybeShowWeeklyReview === 'function') maybeShowWeeklyReview();
 } else {
   document.getElementById('tutorialOverlay').classList.add('hidden');
   openSetup();
