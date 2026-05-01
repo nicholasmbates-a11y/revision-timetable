@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Cache-busting: tell browsers to always re-check for the latest version -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0b0d12">
@@ -129,6 +133,11 @@
   const recId = useMobile ? 'linkMobile' : 'linkDesktop';
   document.getElementById(recId).classList.add('recommended');
 
+  // Add cachebuster to manual link hrefs as well
+  const buster = Math.floor(Date.now() / (5 * 60 * 1000));
+  document.getElementById('linkMobile').href  = `revision-timetable-mobile.html?v=${buster}`;
+  document.getElementById('linkDesktop').href = `revision-timetable.html?v=${buster}`;
+
   // Allow ?force=desktop or ?force=mobile to override
   const forced = new URLSearchParams(location.search).get('force');
   let finalTarget = target;
@@ -140,7 +149,13 @@
     document.getElementById('manualLinks').classList.add('show');
   }, 800);
 
-  // Redirect using replace() so back-button doesn't loop here
+  // Redirect using replace() so back-button doesn't loop here.
+  // Append a cachebuster timestamp rounded to the nearest 5 minutes so browsers
+  // re-fetch periodically even if their cache headers are being aggressive,
+  // while still allowing same-session re-use of the file.
+  const cacheBuster = Math.floor(Date.now() / (5 * 60 * 1000));
+  const sep = finalTarget.includes('?') ? '&' : '?';
+  finalTarget = `${finalTarget}${sep}v=${cacheBuster}`;
   setTimeout(() => {
     location.replace(finalTarget);
   }, 200);
