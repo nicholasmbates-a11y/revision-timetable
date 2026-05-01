@@ -1241,7 +1241,7 @@ body::before {
     border: 1px solid #999 !important; font-size: .7rem !important;
   }
   .mastery-card, .stat-badge { border: 1px solid #888 !important; background: white !important; }
-  .mastery-subj-name, .mastery-level { color: black !important; }
+  .mastery-subj-name, .mastery-level, .mastery-tier-name { color: black !important; }
   @page { margin: 1cm; }
 }
 
@@ -1475,13 +1475,36 @@ body::before {
 .mastery-title { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
 .mastery-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
 .mastery-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
-.mastery-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.mastery-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; }
 .mastery-subj-name { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; line-height: 1.2; }
+
+/* Old level styles kept for backwards compatibility / light theme override */
 .mastery-level { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; line-height: 1; text-align: right; }
 .mastery-level-label { font-size: .52rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; text-align: right; margin-top: 1px; }
+
+/* New tier badge */
+.mastery-tier-wrap {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 2px; flex-shrink: 0; min-width: 0;
+}
+.mastery-tier-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,.18));
+}
+.mastery-tier-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .65rem;
+  letter-spacing: -.005em;
+  text-align: right;
+  line-height: 1.15;
+  text-transform: none;
+}
+
 .mastery-bar-wrap { height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
 .mastery-bar { height: 100%; border-radius: 3px; transition: width .4s cubic-bezier(.4,0,.2,1); }
-.mastery-progress-text { font-size: .62rem; color: var(--muted); display: flex; justify-content: space-between; }
+.mastery-progress-text { font-size: .62rem; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
 
 /* CONTROLS */
 .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -1903,6 +1926,58 @@ option { background: #181c25; }
   white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,.5);
 }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* ════════ LEVEL-UP TOAST (tier-up celebration) ════════ */
+.level-up-toast {
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px) scale(.85);
+  background: var(--surface);
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  padding: 22px 32px;
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -.01em;
+  z-index: 9000;
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .35s ease;
+  text-align: center;
+  white-space: nowrap;
+  max-width: calc(100vw - 40px);
+}
+.level-up-toast strong {
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.level-up-toast.hidden { display: none; }
+.level-up-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+@keyframes level-up-pulse {
+  0%   { transform: translateX(-50%) translateY(0) scale(1); }
+  35%  { transform: translateX(-50%) translateY(-4px) scale(1.04); }
+  70%  { transform: translateX(-50%) translateY(0) scale(1); }
+  100% { transform: translateX(-50%) translateY(0) scale(1); }
+}
+.level-up-toast.show {
+  animation: level-up-pulse .9s ease .25s 1;
+}
+
+@media (max-width: 600px) {
+  .level-up-toast {
+    font-size: .95rem;
+    padding: 18px 24px;
+    white-space: normal;
+    line-height: 1.4;
+  }
+}
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -3440,11 +3515,72 @@ function setSlotConfidence(y, m, d, slot, idx, confidence) {
 function toggleSlotDone(y, m, d, slot) {
   const cur = getSlot(y, m, d, slot);
   if (!cur.subject || !cur.modules.length || !cur.modules.some(m => m.module)) return;
+  // Snapshot old tier indices before marking done
+  const oldTiers = cur.done ? null : getTierIndexForAll();
   ensurePath(y, m, d);
   cur.done = !cur.done;
   if (cur.done) cur.completedAt = new Date().toISOString();
   timetable[y][m][d][slot] = cur;
   save();
+  // Detect tier-ups (only when transitioning to done, not undo)
+  if (cur.done && oldTiers) {
+    setTimeout(() => detectAndCelebrateTierUp(oldTiers), 50);
+  }
+}
+
+/* Compare old tier indices to current tier indices.
+   For any subject that has gone up, show a celebratory toast (and play
+   level-up sound if available). */
+function detectAndCelebrateTierUp(oldTiers) {
+  const newTiers = getTierIndexForAll();
+  const counts = computeModuleCounts();
+  const ups = [];
+  Object.keys(newTiers).forEach(sid => {
+    const oldIdx = oldTiers[sid] ?? -1;
+    const newIdx = newTiers[sid] ?? -1;
+    if (newIdx > oldIdx && newIdx >= 0) {
+      const subj = subjects.find(s => String(s.id) === String(sid));
+      if (!subj) return;
+      const mastery = getMastery(subj.id, counts);
+      ups.push({ subj, tier: mastery.tier });
+    }
+  });
+  if (!ups.length) return;
+  // Show toasts in sequence so multiple tier-ups don't overlap
+  ups.forEach((up, i) => {
+    setTimeout(() => {
+      const msg = `${up.tier.emoji} <strong>${up.subj.name}</strong>: ${up.tier.name} unlocked!`;
+      if (typeof showLevelUpToast === 'function') {
+        showLevelUpToast(msg, up.subj.color);
+      } else if (typeof showToast === 'function') {
+        showToast(msg, 4500);
+      }
+      if (typeof playSound === 'function') playSound('levelup');
+    }, i * 600);
+  });
+}
+
+/* Special celebratory toast for tier-ups (bigger, more colourful) */
+function showLevelUpToast(message, accentColor) {
+  let el = document.getElementById('levelUpToast');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'levelUpToast';
+    el.className = 'level-up-toast';
+    document.body.appendChild(el);
+  }
+  el.innerHTML = message;
+  el.style.borderColor = accentColor || 'var(--gold)';
+  el.style.boxShadow = `0 16px 60px ${accentColor ? accentColor + '55' : 'rgba(245,200,66,.4)'}`;
+  el.classList.remove('hidden');
+  // Force reflow then show
+  void el.offsetWidth;
+  el.classList.add('show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.classList.add('hidden'), 400);
+  }, 3500);
 }
 
 function getDaysInMonth(y, m)    { return new Date(y, m + 1, 0).getDate(); }
@@ -3558,14 +3694,156 @@ function daysSince(date) {
   return Math.floor(ms / (1000 * 60 * 60 * 24));
 }
 
+/* ═══════════════════════════════════
+   MASTERY TIER SYSTEM
+
+   Pre-mastery tiers reward early progress (% of modules touched at least once).
+   Once 100% are touched, "Mastery Levels" begin (every module ≥N sessions).
+
+   Tier index → name/emoji/badge:
+     0: Seedling       🌱  (≥1 module touched)
+     1: Sprout         🌿  (≥20% of modules touched)
+     2: Branching out  🌳  (≥40%)
+     3: Almost there   ⭐  (≥60%)
+     4: So close!      🚀  (≥80%)
+     5: Mastery        ✨  (every module ≥1)
+     6: Champion       🏆  (every module ≥2)
+     7: Grandmaster    👑  (every module ≥3)
+     8+: Legend Lvl N  💎  (every module ≥(N+2))
+═══════════════════════════════════ */
+const PRE_MASTERY_TIERS = [
+  { name: 'Seedling',      emoji: '🌱', threshold: 0.001 }, // any progress at all
+  { name: 'Sprout',        emoji: '🌿', threshold: 0.20 },
+  { name: 'Branching out', emoji: '🌳', threshold: 0.40 },
+  { name: 'Almost there',  emoji: '⭐', threshold: 0.60 },
+  { name: 'So close!',     emoji: '🚀', threshold: 0.80 },
+];
+const MASTERY_TIERS = [
+  { name: 'Mastery',     emoji: '✨', minSessions: 1 },
+  { name: 'Champion',    emoji: '🏆', minSessions: 2 },
+  { name: 'Grandmaster', emoji: '👑', minSessions: 3 },
+];
+function getLegendTier(legendLevel) {
+  // legendLevel 1 = "Legend Lvl 1" (every module ≥4 sessions), 2 = ≥5, etc.
+  return { name: `Legend Lvl ${legendLevel}`, emoji: '💎', minSessions: 3 + legendLevel };
+}
+
+/* Returns full mastery state for a subject:
+   {
+     tierIndex: 0..N,        // global tier index (0=Seedling, 5=Mastery, 8+=Legend)
+     tier: { name, emoji },  // current tier descriptor
+     progress: 0..1,         // progress toward next tier
+     atNextLevel: number,    // count of modules meeting next tier criterion
+     total: number,          // total modules in subject
+     nextLevelLabel: string, // textual hint, e.g. "40%" or "Level 2"
+     nextTier: { name, emoji } | null,
+     pct: number,            // % of modules touched (for pre-mastery display)
+     coreLevel: number,      // legacy: minimum sessions across all modules (for backwards compatibility)
+   }
+*/
 function getMastery(subjId, counts) {
   const subj = subjects.find(s => s.id === subjId);
-  if (!subj || !subj.modules.length) return { level:0, progress:0, atNextLevel:0, total:0, nextLevel:1 };
+  if (!subj || !subj.modules.length) {
+    return {
+      tierIndex: -1,
+      tier: { name: '—', emoji: '·' },
+      progress: 0, atNextLevel: 0, total: 0,
+      nextLevelLabel: '', nextTier: null, pct: 0, coreLevel: 0,
+    };
+  }
   const mCounts = subj.modules.map(mod => counts[`${subjId}::${mod}`] || 0);
-  const level   = Math.min(...mCounts);
-  const next    = level + 1;
-  const atNext  = mCounts.filter(c => c >= next).length;
-  return { level, progress: atNext / subj.modules.length, atNextLevel: atNext, total: subj.modules.length, nextLevel: next };
+  const total = subj.modules.length;
+  const touched = mCounts.filter(c => c >= 1).length;
+  const pct = touched / total;
+  const coreLevel = Math.min(...mCounts);
+
+  // Pre-mastery (coreLevel === 0, i.e. not every module touched)
+  if (coreLevel === 0) {
+    if (touched === 0) {
+      // No tier yet, show progress toward Seedling (= first session)
+      return {
+        tierIndex: -1,
+        tier: { name: 'Not started', emoji: '·' },
+        progress: 0, atNextLevel: 0, total,
+        nextLevelLabel: 'Seedling', nextTier: PRE_MASTERY_TIERS[0],
+        pct, coreLevel: 0,
+      };
+    }
+    // Find current pre-mastery tier (highest threshold <= pct)
+    let tierIdx = 0;
+    for (let i = 0; i < PRE_MASTERY_TIERS.length; i++) {
+      if (pct >= PRE_MASTERY_TIERS[i].threshold) tierIdx = i;
+      else break;
+    }
+    const currentTier = PRE_MASTERY_TIERS[tierIdx];
+    const nextTier = (tierIdx < PRE_MASTERY_TIERS.length - 1)
+      ? PRE_MASTERY_TIERS[tierIdx + 1]
+      : MASTERY_TIERS[0];
+    // Progress toward next tier (linear in pct)
+    let progress;
+    if (tierIdx < PRE_MASTERY_TIERS.length - 1) {
+      const cur = currentTier.threshold;
+      const nxt = PRE_MASTERY_TIERS[tierIdx + 1].threshold;
+      progress = Math.max(0, Math.min(1, (pct - cur) / (nxt - cur)));
+    } else {
+      // "So close!" tier — progress is from 80% to 100%
+      progress = Math.max(0, Math.min(1, (pct - 0.80) / 0.20));
+    }
+    return {
+      tierIndex: tierIdx,
+      tier: currentTier,
+      progress,
+      atNextLevel: touched, total,
+      nextLevelLabel: nextTier.name,
+      nextTier,
+      pct,
+      coreLevel: 0,
+    };
+  }
+
+  // Mastery tiers (coreLevel ≥ 1)
+  // Determine which mastery tier we're in
+  let tierGlobalIdx;
+  let currentTier, nextTier;
+  if (coreLevel <= MASTERY_TIERS.length) {
+    // 1 → Mastery (idx 5), 2 → Champion (idx 6), 3 → Grandmaster (idx 7)
+    tierGlobalIdx = 5 + (coreLevel - 1);
+    currentTier = MASTERY_TIERS[coreLevel - 1];
+    nextTier = (coreLevel < MASTERY_TIERS.length)
+      ? MASTERY_TIERS[coreLevel]
+      : getLegendTier(1);
+  } else {
+    const legendLevel = coreLevel - MASTERY_TIERS.length;
+    tierGlobalIdx = 5 + MASTERY_TIERS.length + (legendLevel - 1);
+    currentTier = getLegendTier(legendLevel);
+    nextTier = getLegendTier(legendLevel + 1);
+  }
+  const next = coreLevel + 1;
+  const atNext = mCounts.filter(c => c >= next).length;
+  return {
+    tierIndex: tierGlobalIdx,
+    tier: currentTier,
+    progress: atNext / total,
+    atNextLevel: atNext, total,
+    nextLevelLabel: nextTier.name,
+    nextTier,
+    pct,
+    coreLevel,
+  };
+}
+
+/* Returns the highest-tier achieved across all subjects (used for level-up detection) */
+function getTierIndexForAll() {
+  if (!subjects || !subjects.length) return {};
+  const counts = computeModuleCounts();
+  const out = {};
+  subjects.forEach(s => { out[s.id] = getMastery(s.id, counts).tierIndex; });
+  return out;
+}
+
+/* Display string for a tier */
+function tierDisplay(tier) {
+  return `${tier.emoji} ${tier.name}`;
 }
 
 /* ═══════════════════════════════════
@@ -3794,7 +4072,8 @@ function renderMastery() {
   const lastDoneMap = computeLastDoneMap();
 
   subjects.forEach(subj => {
-    const { level, progress, atNextLevel, total, nextLevel } = getMastery(subj.id, counts);
+    const mastery = getMastery(subj.id, counts);
+    const { tier, progress, atNextLevel, total, nextLevelLabel, pct, coreLevel, tierIndex } = mastery;
     const card = document.createElement('div');
     card.className = 'mastery-card';
     card.style.borderColor = `${subj.color}33`;
@@ -3807,13 +4086,18 @@ function renderMastery() {
     top.className = 'mastery-card-top';
     const nameEl = document.createElement('div');
     nameEl.className = 'mastery-subj-name'; nameEl.style.color = subj.color; nameEl.textContent = subj.name;
-    const lvlWrap = document.createElement('div');
-    const lvlNum = document.createElement('div');
-    lvlNum.className = 'mastery-level'; lvlNum.style.color = subj.color; lvlNum.textContent = level;
-    const lvlLbl = document.createElement('div');
-    lvlLbl.className = 'mastery-level-label'; lvlLbl.textContent = 'Level';
-    lvlWrap.appendChild(lvlNum); lvlWrap.appendChild(lvlLbl);
-    top.appendChild(nameEl); top.appendChild(lvlWrap);
+
+    const tierWrap = document.createElement('div');
+    tierWrap.className = 'mastery-tier-wrap';
+    const tierEmoji = document.createElement('div');
+    tierEmoji.className = 'mastery-tier-emoji'; tierEmoji.textContent = tier.emoji;
+    const tierName = document.createElement('div');
+    tierName.className = 'mastery-tier-name';
+    tierName.textContent = tier.name;
+    tierName.style.color = subj.color;
+    tierWrap.appendChild(tierEmoji); tierWrap.appendChild(tierName);
+
+    top.appendChild(nameEl); top.appendChild(tierWrap);
 
     const barWrap = document.createElement('div');
     barWrap.className = 'mastery-bar-wrap';
@@ -3824,9 +4108,24 @@ function renderMastery() {
     const progText = document.createElement('div');
     progText.className = 'mastery-progress-text';
     const left = document.createElement('span');
-    left.textContent = total === 0 ? 'No modules' : progress >= 1 ? `All ${total} at Lvl ${nextLevel}+` : `${atNextLevel}/${total} → Level ${nextLevel}`;
+    if (total === 0) {
+      left.textContent = 'No modules';
+    } else if (tierIndex === -1) {
+      // No tier yet: complete first session
+      left.textContent = `Complete a session to start`;
+    } else if (coreLevel === 0) {
+      // Pre-mastery: show "X% touched → next tier"
+      left.textContent = `${Math.round(pct * 100)}% touched → ${nextLevelLabel}`;
+    } else {
+      // Mastery+: show "X/Y at next sub-level"
+      if (progress >= 1) {
+        left.textContent = `All ${total} ready for ${nextLevelLabel}`;
+      } else {
+        left.textContent = `${atNextLevel}/${total} → ${nextLevelLabel}`;
+      }
+    }
     const right = document.createElement('span');
-    right.textContent = `${total} modules`;
+    right.textContent = `${total} module${total !== 1 ? 's' : ''}`;
     progText.appendChild(left); progText.appendChild(right);
 
     card.appendChild(top); card.appendChild(barWrap); card.appendChild(progText);
@@ -3834,7 +4133,7 @@ function renderMastery() {
     /* Neglected modules check (>14 days since last revised, or never revised) */
     const neglected = subj.modules.filter(mod => {
       const last = lastDoneMap[`${subj.id}::${mod}`];
-      if (!last) return (counts[`${subj.id}::${mod}`] || 0) === 0; // never done = neglected once they've started revising
+      if (!last) return (counts[`${subj.id}::${mod}`] || 0) === 0;
       return daysSince(last) >= 14;
     });
     const hasStartedRevising = subj.modules.some(mod => (counts[`${subj.id}::${mod}`] || 0) > 0);
