@@ -1473,16 +1473,34 @@ body::before {
 /* MASTERY */
 .mastery-section { margin-bottom: 28px; }
 .mastery-title { font-size: .65rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
-.mastery-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-.mastery-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; position: relative; overflow: hidden; }
+.mastery-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.mastery-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .15s, box-shadow .15s;
+}
+.mastery-card.readiness-amber { box-shadow: 0 0 0 1px rgba(251,146,60,.12) inset; }
+.mastery-card.readiness-red   { box-shadow: 0 0 0 1px rgba(239,68,68,.12) inset; }
+
+.mastery-summary {
+  padding: 16px;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mastery-card.expanded .mastery-summary {
+  border-bottom: 1px solid var(--border);
+}
+
 .mastery-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 12px; }
 .mastery-subj-name { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; line-height: 1.2; }
 
-/* Old level styles kept for backwards compatibility / light theme override */
 .mastery-level { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; line-height: 1; text-align: right; }
 .mastery-level-label { font-size: .52rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; text-align: right; margin-top: 1px; }
 
-/* New tier badge */
 .mastery-tier-wrap {
   display: flex; flex-direction: column; align-items: flex-end;
   gap: 2px; flex-shrink: 0; min-width: 0;
@@ -1502,9 +1520,92 @@ body::before {
   text-transform: none;
 }
 
-.mastery-bar-wrap { height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.mastery-bar-wrap { height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
 .mastery-bar { height: 100%; border-radius: 3px; transition: width .4s cubic-bezier(.4,0,.2,1); }
-.mastery-progress-text { font-size: .62rem; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+
+/* Status line and expand chevron */
+.mastery-line-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.mastery-status-line {
+  flex: 1;
+  font-size: .68rem;
+  color: var(--dim);
+  display: flex; align-items: center; gap: 6px;
+  line-height: 1.4;
+}
+.mastery-status-line strong {
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+}
+.mastery-status-emoji { font-size: .9rem; line-height: 1; flex-shrink: 0; }
+.mastery-card.readiness-amber .mastery-status-line strong { color: #fb923c; }
+.mastery-card.readiness-red   .mastery-status-line strong { color: var(--red); }
+
+.mastery-expand-chev {
+  flex-shrink: 0;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  font-size: .65rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  transition: transform .25s ease, color .15s, background .15s;
+}
+.mastery-card.expanded .mastery-expand-chev { transform: rotate(180deg); color: var(--text); background: var(--surface3); }
+
+/* Details panel (hidden by default) */
+.mastery-details {
+  display: none;
+  padding: 14px 16px 16px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+}
+.mastery-card.expanded .mastery-details { display: block; }
+
+.mastery-detail-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: .68rem;
+  color: var(--text);
+  letter-spacing: -.005em;
+  margin-bottom: 8px;
+  margin-top: 14px;
+}
+.mastery-readiness-detail .readiness-stats { margin-bottom: 10px; }
+.mastery-readiness-detail + .mastery-detail-title,
+.mastery-readiness-detail:first-child .mastery-detail-title { margin-top: 0; }
+.mastery-readiness-detail:first-child > :first-child { margin-top: 0; }
+.mastery-details > :first-child { margin-top: 0 !important; }
+.mastery-details > :first-child > .mastery-detail-title:first-child { margin-top: 0; }
+
+.mastery-detail-note {
+  font-size: .68rem;
+  color: var(--dim);
+  font-style: italic;
+}
+
+.mastery-neglected-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.mastery-neglected-chip {
+  font-size: .58rem;
+  padding: 3px 8px;
+  border-radius: 50px;
+  background: rgba(251,146,60,.08);
+  border: 1px solid rgba(251,146,60,.25);
+  color: #fb923c;
+  font-family: 'DM Mono', monospace;
+}
+.mastery-neglected-more {
+  font-size: .58rem;
+  padding: 3px 8px;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+}
+
+.exams-list { display: flex; flex-direction: column; gap: 6px; }
+
 
 /* CONTROLS */
 .controls { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -1855,6 +1956,16 @@ body::before {
 }
 .day-tile.today-tile .tile-date { color: #38bdf8; }
 
+/* Brief highlight when jumping to a specific date */
+@keyframes jump-flash-anim {
+  0%   { box-shadow: 0 0 0 0 rgba(56,189,248,.5); border-color: rgba(56,189,248,.8); }
+  60%  { box-shadow: 0 0 0 12px rgba(56,189,248,0); border-color: rgba(56,189,248,.4); }
+  100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+}
+.day-tile.jump-flash {
+  animation: jump-flash-anim 1.6s ease 1;
+}
+
 .tile-day-name {
   font-size: .58rem; color: var(--muted);
   text-transform: uppercase; letter-spacing: .08em;
@@ -1882,6 +1993,66 @@ body::before {
   font-family: 'DM Mono', monospace;
   font-weight: 400;
   opacity: .7;
+}
+
+/* "ACTIVE NOW" badge on currently-running session block */
+.session-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: .52rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: #38bdf8;
+  background: rgba(56,189,248,.12);
+  border: 1px solid rgba(56,189,248,.35);
+  padding: 2px 7px;
+  border-radius: 50px;
+  margin-left: 4px;
+  text-transform: uppercase;
+}
+.session-active-dot {
+  width: 6px; height: 6px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(56,189,248,.6);
+  animation: now-pulse 1.6s ease-in-out infinite;
+}
+@keyframes now-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(56,189,248,.6); }
+  70%  { box-shadow: 0 0 0 7px rgba(56,189,248,0); }
+  100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+}
+
+/* Subtle border accent on the active session block itself */
+.session-block.active-now {
+  border-color: rgba(56,189,248,.35);
+  box-shadow: 0 0 0 1px rgba(56,189,248,.15), 0 4px 14px rgba(56,189,248,.08);
+}
+
+/* "NOW" pulse on today's calendar day tile */
+.tile-now-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: .08em;
+  color: #38bdf8;
+  font-weight: 600;
+}
+.tile-now-pulse {
+  width: 7px; height: 7px;
+  background: #38bdf8;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(56,189,248,.6);
+  animation: now-pulse 1.6s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.tile-now-label {
+  text-transform: uppercase;
 }
 .session-label.morning   { color: #fcd34d; }
 .session-label.lunch     { color: #6ee7b7; }
@@ -1921,11 +2092,24 @@ option { background: #181c25; }
   transform: translateX(-50%) translateY(80px);
   background: linear-gradient(135deg, rgba(245,200,66,.97), rgba(249,115,22,.97));
   color: #0b0d12; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem;
-  padding: 13px 26px; border-radius: 50px; z-index: 1000; opacity: 0;
+  padding: 13px 22px; border-radius: 18px; z-index: 1000; opacity: 0;
   transition: transform .4s cubic-bezier(.34,1.56,.64,1), opacity .3s;
-  white-space: nowrap; box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  max-width: calc(100vw - 32px);
+  text-align: center;
+  line-height: 1.35;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
 }
 .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast .toast-reason {
+  display: block;
+  font-family: 'DM Mono', monospace;
+  font-weight: 400;
+  font-size: .65rem;
+  color: rgba(11,13,18,.78);
+  margin-top: 3px;
+  letter-spacing: .01em;
+  text-transform: lowercase;
+}
 
 /* ════════ LEVEL-UP TOAST (tier-up celebration) ════════ */
 .level-up-toast {
@@ -2308,7 +2492,7 @@ option { background: #181c25; }
         <button class="menu-item" onclick="closeMenuAnd(exportICS)">📅 <span>Export to Calendar</span></button>
         <div class="menu-divider"></div>
         <button class="menu-item" id="cbToggleBtn" onclick="toggleColourBlind()">⊞ <span>Pattern Overlay</span></button>
-        <button class="menu-item" onclick="closeMenu(); window.print();">🖨 <span>Print / Save as PDF</span></button>
+        <button class="menu-item" onclick="closeMenu(); printApp();">🖨 <span>Print / Save as PDF</span></button>
       </div>
     </div>
     <button class="topbar-btn topbar-help" onclick="showTutorial()" title="Open the tutorial">❓ Help</button>
@@ -2953,29 +3137,17 @@ option { background: #181c25; }
   </div>
 
   <!-- Mastery (collapsible) -->
+  <!-- Subjects (combined Mastery + Readiness) -->
   <div class="collapsible-section" id="masterySection">
     <div class="collapsible-header" onclick="toggleSection('masterySection')">
       <div class="collapsible-title">
         <span class="collapsible-chev">▾</span>
-        <span>🎯 Subject Mastery</span>
+        <span>🎯 Subjects</span>
+        <span class="collapsible-meta" id="subjectsMeta"></span>
       </div>
     </div>
     <div class="collapsible-body">
       <div class="mastery-cards" id="masteryCards"></div>
-    </div>
-  </div>
-
-  <!-- Exam Readiness (collapsible) -->
-  <div class="collapsible-section" id="readinessSection">
-    <div class="collapsible-header" onclick="toggleSection('readinessSection')">
-      <div class="collapsible-title">
-        <span class="collapsible-chev">▾</span>
-        <span>🎯 Exam Readiness</span>
-        <span class="collapsible-meta" id="readinessMeta"></span>
-      </div>
-    </div>
-    <div class="collapsible-body">
-      <div class="readiness-cards" id="readinessCards"></div>
     </div>
   </div>
 
@@ -3998,10 +4170,12 @@ function evaluateBadges() {
 /* ═══════════════════════════════════
    TOAST
 ═══════════════════════════════════ */
-function showToast(msg) {
+function showToast(msg, duration) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3400);
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(() => t.classList.remove('show'), duration || 3400);
 }
 
 /* ═══════════════════════════════════
@@ -4058,7 +4232,16 @@ function renderBadges() {
     grid.appendChild(pill);
   });
   const progEl = document.getElementById('badgesProgress');
-  if (progEl) progEl.textContent = `${badges.length} / ${BADGE_DEFS.length} unlocked`;
+  if (progEl) {
+    if (!badges.length) {
+      progEl.textContent = `0 / ${BADGE_DEFS.length} unlocked`;
+    } else {
+      // Show first 4 unlocked badge emojis + count
+      const unlocked = BADGE_DEFS.filter(b => badges.includes(b.id));
+      const preview = unlocked.slice(0, 4).map(b => b.emoji).join(' ');
+      progEl.innerHTML = `${preview} <span style="opacity:.7;margin-left:6px;">${badges.length}/${BADGE_DEFS.length}</span>`;
+    }
+  }
 }
 
 /* ═══════════════════════════════════
@@ -4067,20 +4250,44 @@ function renderBadges() {
 function renderMastery() {
   const container = document.getElementById('masteryCards');
   container.innerHTML = '';
-  if (!subjects) return;
+  const meta = document.getElementById('subjectsMeta');
+  if (!subjects) { if (meta) meta.textContent = ''; return; }
   const counts = computeModuleCounts();
   const lastDoneMap = computeLastDoneMap();
 
+  // Header meta: count subjects with imminent exam pressure
+  let urgentCount = 0, tightCount = 0;
+  subjects.forEach(s => {
+    const r = computeReadinessForSubject(s);
+    if (!r || r.isPast) return;
+    if (r.status === 'red')   urgentCount++;
+    if (r.status === 'amber') tightCount++;
+  });
+  if (meta) {
+    if (urgentCount)      meta.textContent = `${urgentCount} behind, ${tightCount} tight`;
+    else if (tightCount)  meta.textContent = `${tightCount} tight`;
+    else                  meta.textContent = subjects.length ? 'On track' : '';
+  }
+
   subjects.forEach(subj => {
     const mastery = getMastery(subj.id, counts);
+    const readiness = computeReadinessForSubject(subj); // null if no exams set
     const { tier, progress, atNextLevel, total, nextLevelLabel, pct, coreLevel, tierIndex } = mastery;
+
     const card = document.createElement('div');
     card.className = 'mastery-card';
     card.style.borderColor = `${subj.color}33`;
+    if (readiness && !readiness.isPast) {
+      card.classList.add(`readiness-${readiness.status}`);
+    }
 
     const accentBar = document.createElement('div');
     accentBar.style.cssText = `position:absolute;top:0;left:0;right:0;height:2px;background:${subj.color};border-radius:14px 14px 0 0;`;
     card.appendChild(accentBar);
+
+    /* Top section (always visible, click toggles details) */
+    const summary = document.createElement('div');
+    summary.className = 'mastery-summary';
 
     const top = document.createElement('div');
     top.className = 'mastery-card-top';
@@ -4105,57 +4312,134 @@ function renderMastery() {
     bar.className = 'mastery-bar'; bar.style.background = subj.color; bar.style.width = `${progress * 100}%`;
     barWrap.appendChild(bar);
 
-    const progText = document.createElement('div');
-    progText.className = 'mastery-progress-text';
-    const left = document.createElement('span');
-    if (total === 0) {
-      left.textContent = 'No modules';
-    } else if (tierIndex === -1) {
-      // No tier yet: complete first session
-      left.textContent = `Complete a session to start`;
-    } else if (coreLevel === 0) {
-      // Pre-mastery: show "X% touched → next tier"
-      left.textContent = `${Math.round(pct * 100)}% touched → ${nextLevelLabel}`;
-    } else {
-      // Mastery+: show "X/Y at next sub-level"
-      if (progress >= 1) {
-        left.textContent = `All ${total} ready for ${nextLevelLabel}`;
-      } else {
-        left.textContent = `${atNextLevel}/${total} → ${nextLevelLabel}`;
-      }
-    }
-    const right = document.createElement('span');
-    right.textContent = `${total} module${total !== 1 ? 's' : ''}`;
-    progText.appendChild(left); progText.appendChild(right);
+    /* Status line — picks the most pressing signal */
+    const statusLine = document.createElement('div');
+    statusLine.className = 'mastery-status-line';
 
-    card.appendChild(top); card.appendChild(barWrap); card.appendChild(progText);
-
-    /* Neglected modules check (>14 days since last revised, or never revised) */
+    // Compute neglected set (used in both summary line and details)
     const neglected = subj.modules.filter(mod => {
       const last = lastDoneMap[`${subj.id}::${mod}`];
       if (!last) return (counts[`${subj.id}::${mod}`] || 0) === 0;
       return daysSince(last) >= 14;
     });
     const hasStartedRevising = subj.modules.some(mod => (counts[`${subj.id}::${mod}`] || 0) > 0);
-    if (neglected.length > 0 && hasStartedRevising) {
-      const warn = document.createElement('div');
-      warn.className = 'neglected-warning';
-      warn.innerHTML = `⚠ <span><strong>${neglected.length}</strong> module${neglected.length > 1 ? 's' : ''} not revised in 2+ weeks</span>`;
-      warn.title = neglected.slice(0, 8).join('\n') + (neglected.length > 8 ? `\n… and ${neglected.length - 8} more` : '');
-      card.appendChild(warn);
+
+    // Decide what to show in the always-visible status line:
+    //   1. If exam ≤30 days: show countdown + readiness status (highest priority)
+    //   2. Else if neglected modules: show warning
+    //   3. Else: show progress text
+    let statusContent;
+    if (readiness && !readiness.isPast && readiness.daysLeft <= 30) {
+      const dayLabel = readiness.daysLeft === 0 ? 'TODAY' : (readiness.daysLeft === 1 ? '1 day' : `${readiness.daysLeft} days`);
+      const statusWord = readiness.status === 'red' ? 'Behind' : readiness.status === 'amber' ? 'Tight' : 'On track';
+      statusContent = `<span class="mastery-status-emoji">${readiness.emoji}</span><strong>${dayLabel}</strong> · ${readiness.coveragePct}% covered · ${statusWord}`;
+    } else if (neglected.length > 0 && hasStartedRevising) {
+      statusContent = `<span class="mastery-status-emoji">⚠</span><strong>${neglected.length}</strong> module${neglected.length > 1 ? 's' : ''} not revised in 2+ weeks`;
+    } else if (total === 0) {
+      statusContent = 'No modules';
+    } else if (tierIndex === -1) {
+      statusContent = 'Complete a session to start';
+    } else if (coreLevel === 0) {
+      statusContent = `${Math.round(pct * 100)}% touched → ${nextLevelLabel}`;
+    } else if (progress >= 1) {
+      statusContent = `All ${total} ready for ${nextLevelLabel}`;
+    } else {
+      statusContent = `${atNextLevel}/${total} → ${nextLevelLabel}`;
+    }
+    statusLine.innerHTML = statusContent;
+
+    const expandHint = document.createElement('div');
+    expandHint.className = 'mastery-expand-chev';
+    expandHint.innerHTML = '<span>▾</span>';
+
+    summary.appendChild(top);
+    summary.appendChild(barWrap);
+    const lineWrap = document.createElement('div');
+    lineWrap.className = 'mastery-line-row';
+    lineWrap.appendChild(statusLine);
+    lineWrap.appendChild(expandHint);
+    summary.appendChild(lineWrap);
+
+    /* Details section (hidden by default, shows on expand) */
+    const details = document.createElement('div');
+    details.className = 'mastery-details';
+
+    // Readiness detail block (if exam set)
+    if (readiness && !readiness.isPast) {
+      const rd = document.createElement('div');
+      rd.className = 'mastery-readiness-detail';
+
+      // Stats row
+      const stats = document.createElement('div');
+      stats.className = 'readiness-stats';
+      const cells = [
+        { val: readiness.touched,   lbl: 'Touched' },
+        { val: readiness.mastered,  lbl: 'Mastered' },
+        { val: readiness.untouched, lbl: 'To do' },
+      ];
+      cells.forEach(c => {
+        const s = document.createElement('div');
+        s.className = 'readiness-stat';
+        s.innerHTML = `<div class="readiness-stat-val">${c.val}<span style="opacity:.4;font-size:.7em;">/${readiness.scope}</span></div><div class="readiness-stat-lbl">${c.lbl}</div>`;
+        stats.appendChild(s);
+      });
+      rd.appendChild(stats);
+
+      // Pace message
+      const pace = document.createElement('div');
+      pace.className = 'readiness-pace';
+      pace.innerHTML = `<span class="readiness-pace-emoji">${readiness.emoji}</span><span class="readiness-pace-msg">${readiness.msg}</span>`;
+      rd.appendChild(pace);
+
+      details.appendChild(rd);
+    } else if (readiness && readiness.isPast) {
+      const past = document.createElement('div');
+      past.className = 'mastery-detail-note';
+      past.textContent = `Last exam was ${Math.abs(readiness.daysLeft)} days ago.`;
+      details.appendChild(past);
     }
 
-    /* Exam countdowns (multiple papers) */
+    // Neglected list (if applicable)
+    if (neglected.length > 0 && hasStartedRevising) {
+      const neg = document.createElement('div');
+      neg.className = 'mastery-neglected-detail';
+      neg.innerHTML = `<div class="mastery-detail-title">⚠ Not revised in 2+ weeks</div>`;
+      const list = document.createElement('div');
+      list.className = 'mastery-neglected-list';
+      neglected.slice(0, 12).forEach(mod => {
+        const chip = document.createElement('span');
+        chip.className = 'mastery-neglected-chip';
+        chip.textContent = mod;
+        list.appendChild(chip);
+      });
+      if (neglected.length > 12) {
+        const more = document.createElement('span');
+        more.className = 'mastery-neglected-more';
+        more.textContent = `+${neglected.length - 12} more`;
+        list.appendChild(more);
+      }
+      neg.appendChild(list);
+      details.appendChild(neg);
+    }
+
+    /* Exam list */
     const exams = (examDates[subj.id] || []).slice().sort((a, b) => a.date.localeCompare(b.date));
     const examsWrap = document.createElement('div');
     examsWrap.className = 'exams-block';
+    const examsTitle = document.createElement('div');
+    examsTitle.className = 'mastery-detail-title';
+    examsTitle.textContent = exams.length ? '📅 Exams' : '📅 Exam dates';
+    examsWrap.appendChild(examsTitle);
+
+    const examsList = document.createElement('div');
+    examsList.className = 'exams-list';
 
     if (exams.length === 0) {
       const setBtn = document.createElement('button');
       setBtn.className = 'exam-add-btn';
       setBtn.textContent = '+ Add exam date';
-      setBtn.onclick = () => openExamModal(subj.id);
-      examsWrap.appendChild(setBtn);
+      setBtn.onclick = (e) => { e.stopPropagation(); openExamModal(subj.id); };
+      examsList.appendChild(setBtn);
     } else {
       exams.forEach(exam => {
         const examDate = new Date(exam.date);
@@ -4165,8 +4449,8 @@ function renderMastery() {
 
         const pill = document.createElement('button');
         pill.className = 'exam-pill';
-        if (days < 0) pill.classList.add('past');
-        else if (days <= 7) pill.classList.add('urgent');
+        if (days < 0)        pill.classList.add('past');
+        else if (days <= 7)  pill.classList.add('urgent');
         else if (days <= 30) pill.classList.add('soon');
 
         const dateLabel = examDate.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
@@ -4174,31 +4458,39 @@ function renderMastery() {
         const modCount = (exam.modules || []).length;
 
         let countdownText;
-        if (days < 0) countdownText = `${Math.abs(days)}d ago`;
+        if (days < 0)        countdownText = `${Math.abs(days)}d ago`;
         else if (days === 0) countdownText = 'TODAY';
         else if (days === 1) countdownText = 'tomorrow';
-        else countdownText = `${days}d`;
+        else                 countdownText = `${days}d`;
 
         pill.innerHTML = `
           <span class="exam-pill-name">${escapeHTML(examName)}</span>
           <span class="exam-pill-meta">${dateLabel} · ${countdownText}${modCount ? ` · ${modCount} mod${modCount > 1 ? 's' : ''}` : ''}</span>
         `;
         pill.title = 'Click to edit';
-        pill.onclick = () => openExamModal(subj.id, exam.id);
-        examsWrap.appendChild(pill);
+        pill.onclick = (e) => { e.stopPropagation(); openExamModal(subj.id, exam.id); };
+        examsList.appendChild(pill);
       });
 
       if (exams.length < 6) {
         const addBtn = document.createElement('button');
         addBtn.className = 'exam-add-btn small';
         addBtn.textContent = '+ Add another';
-        addBtn.onclick = () => openExamModal(subj.id);
-        examsWrap.appendChild(addBtn);
+        addBtn.onclick = (e) => { e.stopPropagation(); openExamModal(subj.id); };
+        examsList.appendChild(addBtn);
       }
     }
+    examsWrap.appendChild(examsList);
+    details.appendChild(examsWrap);
 
-    card.appendChild(examsWrap);
+    /* Click handler: tap summary toggles details */
+    summary.onclick = () => {
+      card.classList.toggle('expanded');
+    };
+    summary.style.cursor = 'pointer';
 
+    card.appendChild(summary);
+    card.appendChild(details);
     container.appendChild(card);
   });
 }
@@ -5466,6 +5758,67 @@ function suggestAny() {
   return { subject: pick.subjId, module: pick.module };
 }
 
+/* Build a human-readable explanation of why a module was suggested.
+   Returns up to 2 reasons separated by " · " for compactness. */
+function suggestReason(subjId, module) {
+  const reasons = [];
+  const lastDone = computeLastDoneMap()[`${subjId}::${module}`];
+  const counts = computeSelectionCounts();
+  const count = counts[`${subjId}::${module}`] || 0;
+  const lastConf = computeLastConfidenceMap()[`${subjId}::${module}`];
+
+  // 1. Recency: never done > overdue > recent
+  if (count === 0) {
+    reasons.push("not yet revised");
+  } else if (lastDone) {
+    const days = daysSince(lastDone);
+    if (days >= 14)     reasons.push(`not revised in ${days}d`);
+    else if (days >= 7) reasons.push(`last revised ${days}d ago`);
+    else if (days >= 3) reasons.push(`last revised ${days}d ago`);
+  }
+
+  // 2. Confidence: low confidence raises priority
+  if (lastConf && lastConf.confidence != null && lastConf.confidence <= 2) {
+    reasons.push(`low confidence (${lastConf.confidence}★)`);
+  }
+
+  // 3. Exam pressure
+  if (typeof daysToNextExam === 'function') {
+    // Find an exam covering this module (or any exam if no module restriction)
+    const exams = examDates[subjId] || [];
+    const now = new Date(); now.setHours(0,0,0,0);
+    let bestDays = Infinity;
+    exams.forEach(exam => {
+      if (!exam.date) return;
+      if (exam.modules && exam.modules.length && !exam.modules.includes(module)) return;
+      const d = new Date(exam.date); d.setHours(0,0,0,0);
+      const days = Math.ceil((d - now) / 86400000);
+      if (days >= 0 && days < bestDays) bestDays = days;
+    });
+    if (bestDays !== Infinity && bestDays <= 60) {
+      const examName = (exams.find(e => {
+        if (!e.date) return false;
+        const d = new Date(e.date); d.setHours(0,0,0,0);
+        return Math.ceil((d - now) / 86400000) === bestDays;
+      }) || {}).name;
+      const label = examName ? `${examName} in ${bestDays}d` : `exam in ${bestDays}d`;
+      reasons.push(label);
+    }
+  }
+
+  // Fallback: if no reasons triggered, give a soft default
+  if (!reasons.length) {
+    if (count > 0) {
+      reasons.push("balancing your revision");
+    } else {
+      reasons.push("evens out your coverage");
+    }
+  }
+
+  // Cap at 2 reasons for compactness
+  return reasons.slice(0, 2).join(" · ");
+}
+
 let _lastVarietyNudge = 0;
 function maybeShowVarietyNudge(subjId) {
   if (!allSubjectsHaveExams()) return;
@@ -5490,15 +5843,27 @@ function makeSessionBlock(session, y, m, d) {
   const { key: slot, label, cls } = session;
   const saved = getSlot(y, m, d, slot);
 
+  // Determine if this slot is the current active one (today + within session window)
+  const today = new Date();
+  const isToday = (today.getFullYear() === y && today.getMonth() === m && today.getDate() === d);
+  const activeSess = getActiveSession();
+  const isActiveNow = isToday && activeSess && activeSess.key === slot;
+
   const block = document.createElement('div');
-  block.className = `session-block ${saved.done ? 'done' : ''}`;
+  block.className = `session-block ${saved.done ? 'done' : ''} ${isActiveNow ? 'active-now' : ''}`;
 
   // Top row: label + suggest button
   const topRow = document.createElement('div');
   topRow.className = 'session-top-row';
   const lbl = document.createElement('div');
   lbl.className = `session-label ${cls}`;
-  lbl.innerHTML = `${label}<span class="session-label-time">${formatSessionTime(session)}</span>`;
+  let timeBadge = `<span class="session-label-time">${formatSessionTime(session)}</span>`;
+  if (isActiveNow) {
+    const now = new Date();
+    const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+    timeBadge += `<span class="session-active-badge"><span class="session-active-dot"></span>NOW · ${timeStr}</span>`;
+  }
+  lbl.innerHTML = `${label}${timeBadge}`;
   topRow.appendChild(lbl);
 
   const suggestBtn = document.createElement('button');
@@ -5523,7 +5888,8 @@ function makeSessionBlock(session, y, m, d) {
     }
     addOrUpdateModuleZero(y, m, d, slot, mod);
     refresh();
-    showToast(`✨ Suggested: ${mod}`);
+    const reason = suggestReason(subjId, mod);
+    showToast(`✨ Suggested: ${mod}<br><span class="toast-reason">${reason}</span>`, 4500);
   };
   topRow.appendChild(suggestBtn);
   block.appendChild(topRow);
@@ -5893,6 +6259,14 @@ function renderAccordion() {
         tileLeft.appendChild(tileDate);
         tileLeft.appendChild(tileDayName);
 
+        // "Now" indicator: only shown on today's tile if currently in an active session window
+        if (isToday && isCurrentlyInSessionWindow()) {
+          const nowDot = document.createElement('div');
+          nowDot.className = 'tile-now-indicator';
+          nowDot.innerHTML = `<span class="tile-now-pulse"></span><span class="tile-now-label">NOW</span>`;
+          tileLeft.appendChild(nowDot);
+        }
+
         const restBtn = document.createElement('button');
         restBtn.className = `rest-toggle ${isRest ? 'is-rest' : ''}`;
         restBtn.title = isRest ? 'Remove rest-day mark' : 'Mark this day as rest';
@@ -6222,7 +6596,6 @@ function render() {
   renderNextTask();
   renderBadges();
   renderMastery();
-  renderReadiness();
   renderPapers();
   renderAccordion();
   renderOutlook();
@@ -6281,13 +6654,17 @@ function toggleSection(id) {
 
 function initCollapsible() {
   const collapsedSet = new Set(JSON.parse(localStorage.getItem('rtCollapsed') || '[]'));
-  // Default: collapse achievements + stats on first run
+  // Default: collapse achievements + stats + past papers on first run
   if (!localStorage.getItem('rtCollapsedInit')) {
     collapsedSet.add('badgesSection');
     collapsedSet.add('statsSection');
+    collapsedSet.add('papersSection');
     localStorage.setItem('rtCollapsed', JSON.stringify([...collapsedSet]));
     localStorage.setItem('rtCollapsedInit', '1');
   }
+  // Migration: remove old readinessSection from collapsed set if present (no longer exists)
+  collapsedSet.delete('readinessSection');
+  localStorage.setItem('rtCollapsed', JSON.stringify([...collapsedSet]));
   collapsedSet.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('collapsed');
@@ -6328,6 +6705,19 @@ function isSessionPastToday(slotKey) {
   const s = SESSIONS.find(x => x.key === slotKey);
   if (!s) return false;
   return new Date().getHours() >= s.endHour;
+}
+
+/* True if the current clock time falls inside any session window
+   (e.g. 9-11, 12-1, 15-17). Used for the "NOW" pulse indicator. */
+function isCurrentlyInSessionWindow() {
+  const h = new Date().getHours();
+  return SESSIONS.some(s => h >= s.startHour && h < s.endHour);
+}
+
+/* Returns the session that is currently active, or null. */
+function getActiveSession() {
+  const h = new Date().getHours();
+  return SESSIONS.find(s => h >= s.startHour && h < s.endHour) || null;
 }
 
 function getSessionLabel(key) {
@@ -6567,23 +6957,36 @@ function ensureCalendarOpen() {
 
 function jumpToDate(date) {
   ensureCalendarOpen();
+  // If currently in 4-week outlook view, switch back to month view
+  if (typeof calendarMode !== 'undefined' && calendarMode === 'outlook' && typeof setCalendarMode === 'function') {
+    setCalendarMode('month');
+  }
   currentYear  = date.getFullYear();
   currentMonth = date.getMonth();
-  activeWeekIdx = null;
+  // Set the active week directly so renderAccordion opens the right one
+  const first = getFirstDayOfMonth(currentYear, currentMonth);
+  const dayNum = date.getDate();
+  activeWeekIdx = Math.floor((first + dayNum - 1) / 7);
   render();
   setTimeout(() => {
-    // Open the week containing that date
-    const first = getFirstDayOfMonth(currentYear, currentMonth);
-    const dayNum = date.getDate();
-    const weekIdx = Math.floor((first + dayNum - 1) / 7);
-    const rows = document.querySelectorAll('.week-row');
-    if (rows[weekIdx]) {
-      // Click the bar to open
-      const bar = rows[weekIdx].querySelector('.week-bar');
-      if (bar && !rows[weekIdx].classList.contains('open')) bar.click();
-      else rows[weekIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const openRow = document.querySelector('.week-row.open');
+    if (openRow) {
+      openRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Highlight the target day briefly
+      const tiles = openRow.querySelectorAll('.day-tile');
+      tiles.forEach(t => {
+        const dateText = t.querySelector('.tile-date');
+        if (dateText && parseInt(dateText.textContent) === dayNum) {
+          t.classList.add('jump-flash');
+          setTimeout(() => t.classList.remove('jump-flash'), 1800);
+        }
+      });
+    } else {
+      // Fallback: scroll to the calendar section
+      const cal = document.getElementById('calendarSection');
+      if (cal) cal.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-  }, 80);
+  }, 100);
 }
 
 /* ═══════════════════════════════════
@@ -6647,6 +7050,113 @@ function showTutorial() {
 /* ═══════════════════════════════════
    EXPORT / IMPORT
 ═══════════════════════════════════ */
+/* ═══════════════════════════════════
+   PRINT — temporarily expand all weeks before printing
+═══════════════════════════════════ */
+function printApp() {
+  // Close any open modals/menus
+  ['settingsOverlay','examModalOverlay','paperModalOverlay','reviewModalOverlay'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
+  });
+  if (typeof closeMenu === 'function') closeMenu();
+
+  const accordion = document.getElementById('weekAccordion');
+  const savedActiveWeek = activeWeekIdx;
+
+  if (accordion) {
+    accordion.innerHTML = '';
+    const first    = getFirstDayOfMonth(currentYear, currentMonth);
+    const days     = getDaysInMonth(currentYear, currentMonth);
+    const numWeeks = Math.ceil((first + days) / 7);
+
+    for (let w = 0; w < numWeeks; w++) {
+      const wkDays = getWeekDays(currentYear, currentMonth, w);
+      if (!wkDays.length) continue;
+
+      const row = document.createElement('div');
+      row.className = 'week-row open';
+
+      const bar = document.createElement('div');
+      bar.className = 'week-bar';
+      bar.innerHTML = `<div class="week-bar-left">
+        <div class="week-bar-label">Week ${w + 1}</div>
+        <div class="week-bar-dates">${MONTHS[currentMonth].slice(0,3)} ${wkDays[0]} – ${wkDays[wkDays.length-1]}</div>
+      </div>`;
+      row.appendChild(bar);
+
+      const expanded = document.createElement('div');
+      expanded.className = 'week-expanded';
+      expanded.style.display = 'block';
+
+      const nameRow = document.createElement('div');
+      nameRow.className = 'day-names-row';
+      for (let i = 0; i < 7; i++) {
+        const dn = document.createElement('div');
+        dn.className = 'day-name-label';
+        dn.textContent = DAY_NAMES[i];
+        nameRow.appendChild(dn);
+      }
+      expanded.appendChild(nameRow);
+
+      const daysGrid = document.createElement('div');
+      daysGrid.className = 'expanded-days';
+      const startCell = w * 7;
+
+      for (let i = 0; i < 7; i++) {
+        const dayNum = startCell + i - first + 1;
+        const tile = document.createElement('div');
+        if (dayNum < 1 || dayNum > days) {
+          tile.className = 'day-tile empty-tile';
+          daysGrid.appendChild(tile);
+          continue;
+        }
+        const dateObj = new Date(currentYear, currentMonth, dayNum);
+        const isRest = isRestDay(dateObj);
+        tile.className = `day-tile ${isRest ? 'rest-tile' : ''}`;
+
+        const tileTop = document.createElement('div');
+        tileTop.className = 'tile-top';
+        tileTop.innerHTML = `<div><div class="tile-date">${dayNum}</div><div class="tile-day-name">${DAY_NAMES[i]}</div></div>`;
+        tile.appendChild(tileTop);
+
+        if (isRest) {
+          const restRow = document.createElement('div');
+          restRow.style.cssText = 'text-align:center;padding:8px;color:#888;font-size:.7rem;';
+          restRow.textContent = '🌴 Rest day';
+          tile.appendChild(restRow);
+        } else {
+          SESSIONS.forEach(sess => {
+            const slot = getSlot(currentYear, currentMonth, dayNum, sess.key);
+            const sessEl = document.createElement('div');
+            sessEl.className = 'session-block';
+            sessEl.style.cssText = 'padding:6px 8px;margin-bottom:4px;font-size:.7rem;';
+            const subj = slot.subject ? subjects.find(s => String(s.id) === String(slot.subject)) : null;
+            const mods = slot.modules.map(m => m.module).filter(Boolean).join(', ');
+            const doneStr = slot.done ? ' ✓' : '';
+            sessEl.innerHTML = `<div style="font-weight:600;">${sess.label.split(' ')[0]} ${formatSessionTime(sess)}${doneStr}</div>
+              ${subj ? `<div style="color:${subj.color};font-weight:700;">${subj.name}</div>` : ''}
+              ${mods ? `<div style="font-size:.65rem;color:#555;">${mods}</div>` : '<div style="font-size:.65rem;color:#aaa;font-style:italic;">—</div>'}`;
+            tile.appendChild(sessEl);
+          });
+        }
+        daysGrid.appendChild(tile);
+      }
+      expanded.appendChild(daysGrid);
+      row.appendChild(expanded);
+      accordion.appendChild(row);
+    }
+  }
+
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      activeWeekIdx = savedActiveWeek;
+      if (typeof renderAccordion === 'function') renderAccordion();
+    }, 500);
+  }, 100);
+}
+
 function exportData() {
   const payload = {
     version: 4,
@@ -6783,6 +7293,16 @@ if (!tutSeen) {
   document.getElementById('tutorialOverlay').classList.add('hidden');
   openSetup();
 }
+
+/* Refresh the "NOW" indicator and Next Task card every minute so they stay
+   accurate as time passes (session windows, time-of-day-aware "Up next" pick). */
+setInterval(() => {
+  if (subjects && subjects.length > 0 && document.getElementById('mainView') &&
+      !document.getElementById('mainView').classList.contains('hidden')) {
+    if (typeof renderNextTask === 'function') renderNextTask();
+    if (typeof renderAccordion === 'function') renderAccordion();
+  }
+}, 60 * 1000);
 </script>
 </body>
 </html>
