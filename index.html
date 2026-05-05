@@ -1,165 +1,297 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<!-- Cache-busting: tell browsers to always re-check for the latest version -->
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0b0d12">
-<title>Revision Timetable</title>
-<style>
-  body {
-    margin: 0;
-    background: #0b0d12;
-    color: #e6e9f0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .loader {
-    text-align: center;
-    max-width: 400px;
-  }
-  .loader-icon {
-    font-size: 3rem;
-    margin-bottom: 16px;
-    animation: pulse 1.4s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: .4; transform: scale(.95); }
-    50%      { opacity: 1; transform: scale(1.05); }
-  }
-  .loader h1 {
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 0 0 8px;
-    background: linear-gradient(120deg, #f97316, #38bdf8 50%, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .loader p {
-    color: #8b93a8;
-    font-size: 0.85rem;
-    margin: 0 0 24px;
-  }
-  .manual-links {
-    display: none;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid #242938;
-  }
-  .manual-links.show { display: flex; }
-  .manual-links small {
-    color: #52596b;
-    font-size: 0.7rem;
-    margin-bottom: 4px;
-  }
-  .manual-link {
-    display: inline-block;
-    padding: 10px 18px;
-    background: #181c25;
-    border: 1px solid #2e3547;
-    border-radius: 10px;
-    color: #e6e9f0;
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: border-color 0.15s;
-  }
-  .manual-link:hover { border-color: rgba(56,189,248,.4); }
-  .manual-link.recommended {
-    background: linear-gradient(135deg, rgba(56,189,248,.15), rgba(167,139,250,.15));
-    border-color: rgba(56,189,248,.4);
-  }
-  .detected {
-    display: inline-block;
-    margin-top: 12px;
-    font-size: 0.7rem;
-    color: #52596b;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-</style>
-</head>
-<body>
-<div class="loader">
-  <div class="loader-icon">📚</div>
-  <h1>Revision Timetable</h1>
-  <p id="status">Detecting your device…</p>
-  <div class="detected" id="detected"></div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Physics Exam Feedback Generator</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Sixth Form Physics</p>
+            <h1>Cohort Exam Feedback Generator</h1>
+          </div>
+          <div class="action-row">
+            <input id="save-name" class="save-name" type="text" value="Year 12 Mock" aria-label="Save name">
+            <select id="saved-slots" aria-label="Saved classes and papers"></select>
+            <button id="save-data" type="button" class="secondary-action">Save</button>
+            <button id="load-data" type="button" class="secondary-action">Load</button>
+            <button id="undo-change" type="button" class="secondary-action">Undo</button>
+            <button id="paste-marks" type="button" class="secondary-action">Paste marks</button>
+            <button id="import-csv" type="button" class="secondary-action">Import marks</button>
+            <button id="import-structure" type="button" class="secondary-action">Import structure</button>
+            <button id="export-csv" type="button" class="secondary-action">Export CSV</button>
+            <button id="print-reports" type="button" class="secondary-action">Report pack</button>
+            <button id="export-summary" type="button" class="secondary-action">Summary</button>
+            <button id="copy-all-feedback" type="button" class="secondary-action">Copy all</button>
+            <button id="copy-feedback" type="button" class="primary-action">Copy selected</button>
+          </div>
+          <input id="csv-file" type="file" accept=".csv,.tsv,.xlsx,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+          <input id="structure-file" type="file" accept=".csv,text/csv" hidden>
+        </header>
 
-  <div class="manual-links" id="manualLinks">
-    <small>Or pick manually:</small>
-    <a class="manual-link" id="linkMobile" href="revision-timetable-mobile.html">📱 Open mobile version</a>
-    <a class="manual-link" id="linkDesktop" href="revision-timetable.html">🖥 Open desktop version</a>
-  </div>
-</div>
+        <section class="panel controls-panel" aria-labelledby="settings-title">
+          <div>
+            <h2 id="settings-title">Settings</h2>
+            <p>Set the topic boundaries for the whole cohort. <span id="save-status" class="save-status">Not saved yet</span></p>
+          </div>
+          <div class="threshold-grid">
+            <label>
+              Good from
+              <span><input id="good-threshold" type="number" min="0" max="100" value="70">%</span>
+            </label>
+            <label>
+              Average from
+              <span><input id="average-threshold" type="number" min="0" max="100" value="40">%</span>
+            </label>
+            <label>
+              Feedback length
+              <select id="feedback-length">
+                <option value="medium">Medium</option>
+                <option value="short">Short</option>
+                <option value="detailed">Detailed</option>
+              </select>
+            </label>
+            <label>
+              Tone
+              <select id="feedback-tone">
+                <option value="encouraging">Encouraging</option>
+                <option value="formal">Formal</option>
+                <option value="direct">Direct revision</option>
+                <option value="parent">Parent-facing</option>
+              </select>
+            </label>
+          </div>
+        </section>
 
-<script>
-(function() {
-  // Detect device class
-  const ua = navigator.userAgent || '';
-  const isIOS = /iPad|iPhone|iPod/.test(ua) ||
-                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isAndroid = /Android/i.test(ua);
-  const isMobileUA = /Mobi|Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(ua);
-  const hasTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-  const smallScreen = Math.min(window.innerWidth, window.innerHeight) <= 820;
+        <section class="panel controls-panel" aria-labelledby="templates-title">
+          <div>
+            <h2 id="templates-title">Templates</h2>
+            <p>Save or load exam structures and comment banks without pupil data.</p>
+          </div>
+          <div class="template-controls">
+            <input id="template-name" type="text" value="Physics template" aria-label="Template name">
+            <select id="template-slots" aria-label="Saved templates"></select>
+            <button id="save-template" type="button" class="secondary-action">Save template</button>
+            <button id="load-template" type="button" class="secondary-action">Load template</button>
+          </div>
+        </section>
 
-  // Decide: mobile if (mobile UA) OR (touch + small screen)
-  const useMobile = isMobileUA || (hasTouch && smallScreen);
+        <section id="csv-mapping-panel" class="panel mapping-panel hidden" aria-labelledby="mapping-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="mapping-title">Import Mapping</h2>
+              <p>Match markbook columns to pupil names, question scores, and optional diagnostics.</p>
+            </div>
+            <button id="apply-csv-mapping" type="button" class="primary-action">Apply import</button>
+          </div>
+          <div id="csv-mapping-fields" class="mapping-grid"></div>
+        </section>
 
-  let label = 'Desktop';
-  if (isIOS) label = 'iOS';
-  else if (isAndroid) label = 'Android';
-  else if (useMobile) label = 'Mobile';
+        <section id="excel-preview-panel" class="panel mapping-panel hidden" aria-labelledby="excel-preview-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="excel-preview-title">Excel Import Wizard</h2>
+              <p id="excel-wizard-help">Choose the sheet, confirm pupil columns, then confirm question columns.</p>
+            </div>
+            <div class="action-row">
+              <select id="excel-sheet-select" aria-label="Excel sheet"></select>
+            </div>
+          </div>
+          <ol class="import-steps" aria-label="Excel import steps">
+            <li data-excel-step="0" class="active">1 Sheet</li>
+            <li data-excel-step="1">2 Pupils</li>
+            <li data-excel-step="2">3 Questions</li>
+          </ol>
+          <div id="excel-preview-summary" class="summary-grid"></div>
+          <div id="excel-wizard-stage" class="wizard-stage"></div>
+          <div class="table-wrap compact-wrap">
+            <table class="analysis-table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Header</th>
+                  <th>Decision</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody id="excel-preview-rows"></tbody>
+            </table>
+          </div>
+          <div class="wizard-actions">
+            <button id="excel-back" type="button" class="secondary-action">Back</button>
+            <button id="excel-next" type="button" class="secondary-action">Next</button>
+            <button id="apply-excel-import" type="button" class="primary-action">Apply Excel import</button>
+          </div>
+        </section>
 
-  const target = useMobile ? 'revision-timetable-mobile.html' : 'revision-timetable.html';
+        <section class="panel validation-panel" aria-labelledby="validation-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="validation-title">Validation</h2>
+              <p>Checks for missing marks, names, topics, and structure issues before export.</p>
+            </div>
+          </div>
+          <ul id="validation-list" class="validation-list"></ul>
+        </section>
 
-  document.getElementById('detected').textContent = `Detected: ${label}`;
-  document.getElementById('status').textContent = `Loading the ${useMobile ? 'mobile' : 'desktop'} version…`;
+        <section class="panel" aria-labelledby="topics-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="topics-title">Exam Structure</h2>
+              <p>Question topics and maximum marks.</p>
+            </div>
+            <div class="action-row">
+              <button id="add-question" type="button" class="primary-action">Add question</button>
+              <button id="reset-topics" type="button" class="secondary-action">Reset topics</button>
+            </div>
+          </div>
 
-  // Mark recommended link
-  const recId = useMobile ? 'linkMobile' : 'linkDesktop';
-  document.getElementById(recId).classList.add('recommended');
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Topic</th>
+                  <th>Max</th>
+                  <th>Good comment</th>
+                  <th>Average comment</th>
+                  <th>Support comment</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="topic-rows"></tbody>
+            </table>
+          </div>
+        </section>
 
-  // Add cachebuster to manual link hrefs as well
-  const buster = Math.floor(Date.now() / (5 * 60 * 1000));
-  document.getElementById('linkMobile').href  = `revision-timetable-mobile.html?v=${buster}`;
-  document.getElementById('linkDesktop').href = `revision-timetable.html?v=${buster}`;
+        <section class="panel" aria-labelledby="cohort-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="cohort-title">Cohort Marks</h2>
+              <p>Scores by pupil and question. Cell colour compares each mark with the cohort average for that question.</p>
+            </div>
+            <button id="add-pupil" type="button" class="primary-action">Add pupil</button>
+          </div>
 
-  // Allow ?force=desktop or ?force=mobile to override
-  const forced = new URLSearchParams(location.search).get('force');
-  let finalTarget = target;
-  if (forced === 'desktop') finalTarget = 'revision-timetable.html';
-  if (forced === 'mobile')  finalTarget = 'revision-timetable-mobile.html';
+          <div class="cohort-tools">
+            <input id="pupil-search" type="search" placeholder="Search pupils" aria-label="Search pupils">
+            <select id="pupil-filter" aria-label="Filter pupils">
+              <option value="all">All pupils</option>
+              <option value="incomplete">Incomplete marks</option>
+              <option value="below-average">Below average threshold</option>
+              <option value="diagnostics">Has diagnostics</option>
+            </select>
+            <button id="copy-filtered-feedback" type="button" class="secondary-action">Copy filtered</button>
+            <button id="print-filtered-reports" type="button" class="secondary-action">Print filtered</button>
+            <span id="filter-count" class="save-status">Showing all pupils</span>
+          </div>
 
-  // Show manual links after a short delay in case redirect fails
-  setTimeout(() => {
-    document.getElementById('manualLinks').classList.add('show');
-  }, 800);
+          <div class="table-wrap">
+            <table class="cohort-table">
+              <thead>
+                <tr id="pupil-score-head"></tr>
+              </thead>
+              <tbody id="pupil-rows"></tbody>
+            </table>
+          </div>
+        </section>
 
-  // Redirect using replace() so back-button doesn't loop here.
-  // Append a cachebuster timestamp rounded to the nearest 5 minutes so browsers
-  // re-fetch periodically even if their cache headers are being aggressive,
-  // while still allowing same-session re-use of the file.
-  const cacheBuster = Math.floor(Date.now() / (5 * 60 * 1000));
-  const sep = finalTarget.includes('?') ? '&' : '?';
-  finalTarget = `${finalTarget}${sep}v=${cacheBuster}`;
-  setTimeout(() => {
-    location.replace(finalTarget);
-  }, 200);
-})();
-</script>
-</body>
+        <section class="panel" aria-labelledby="analysis-title">
+          <div class="section-heading">
+            <div>
+              <h2 id="analysis-title">Cohort Analysis</h2>
+              <p>Topic averages and class-wide strengths or priorities.</p>
+            </div>
+          </div>
+
+          <div id="cohort-summary" class="summary-grid"></div>
+
+          <div class="table-wrap compact-wrap">
+            <table class="analysis-table">
+              <thead>
+                <tr>
+                  <th>Question</th>
+                  <th>Topic</th>
+                  <th>Average</th>
+                  <th>Entries</th>
+                  <th>Pattern</th>
+                </tr>
+              </thead>
+              <tbody id="topic-average-rows"></tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap compact-wrap">
+            <table class="analysis-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Topic</th>
+                  <th>Average</th>
+                  <th>Below average</th>
+                  <th>Suggested intervention</th>
+                </tr>
+              </thead>
+              <tbody id="intervention-rows"></tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap compact-wrap">
+            <table class="analysis-table">
+              <thead>
+                <tr>
+                  <th>Diagnostic</th>
+                  <th>Total</th>
+                  <th>Most affected question</th>
+                  <th>Suggested response</th>
+                </tr>
+              </thead>
+              <tbody id="diagnostic-analysis-rows"></tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap compact-wrap">
+            <table class="analysis-table">
+              <thead>
+                <tr>
+                  <th>Group</th>
+                  <th>Pupils</th>
+                  <th>Focus</th>
+                </tr>
+              </thead>
+              <tbody id="intervention-group-rows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <aside class="feedback-panel" aria-labelledby="feedback-title">
+        <div class="feedback-header">
+          <div>
+            <p class="eyebrow">Generated comment</p>
+            <h2 id="feedback-title"><span id="selected-pupil-name">Pupil 1</span></h2>
+          </div>
+          <div class="feedback-actions">
+            <div class="score-summary">
+              <span id="overall-score">0%</span>
+              <small id="overall-band">No marks yet</small>
+            </div>
+            <button id="toggle-feedback" type="button" class="secondary-action feedback-toggle" aria-expanded="true">Hide</button>
+          </div>
+        </div>
+
+        <article id="feedback-output" class="feedback-output" aria-live="polite"></article>
+        <section class="diagnostics-panel" aria-labelledby="diagnostics-title">
+          <h3 id="diagnostics-title">Question diagnostics</h3>
+          <div id="diagnostic-rows" class="diagnostic-rows"></div>
+        </section>
+      </aside>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
 </html>
